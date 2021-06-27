@@ -1,0 +1,29 @@
+server:
+  port: 8090
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/reservation?useUnicode=true&useSSL=false&amp;characterEncoding=UTF-8
+    #\u914D\u7F6E\u76D1\u63A7\u7EDF\u8BA1\u62E6\u622A\u7684 filters,\u53BB\u6389\u540E\u76D1\u63A7\u754C\u9762sql\u65E0\u6CD5\u7EDF\u8BA1\uFF0C'wall'\u7528\u4E8E\u9632\u706B\u5899
+    filters: stat, wall
+    #\u6700\u5927\u6D3B\u8DC3\u6570
+    maxActive: 200
+    #\u521D\u59CB\u5316\u6570\u91CF
+    initialSize: 1
+    #\u6700\u5927\u8FDE\u63A5\u7B49\u5F85\u8D85\u65F6\u65F6\u95F4
+    maxWait: 60000
+    #\u6253\u5F00PSCache\uFF0C\u5E76\u4E14\u6307\u5B9A\u6BCF\u4E2A\u8FDE\u63A5PSCache\u7684\u5927\u5C0F
+    poolPreparedStatements: true
+    maxPoolPreparedStatementPerConnectionSize: 20
+    #\u901A\u8FC7connectionProperties\u5C5E\u6027\u6765\u6253\u5F00mergeSql\u529F\u80FD\uFF1B\u6162SQL\u8BB0\u5F55
+    connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+    minIdle: 1
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: select 1 from dual
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
