@@ -9,15 +9,21 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.vanyne</groupId>
-    <artifactId>reservation</artifactId>
+    <artifactId>service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>reservation</name>
+    <name>service</name>
     <description>Demo project for Spring Boot</description>
     <properties>
         <java.version>1.8</java.version>
         <mybatis-plus.version>3.3.1</mybatis-plus.version>
         <druid.version>1.1.22</druid.version>
     </properties>
+
+    <modules>
+        <module>../model</module>
+        <module>../client</module>
+    </modules>
+
     <dependencies>
         <!--mysql 连接-->
         <dependency>
@@ -51,6 +57,12 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.vayne</groupId>
+            <artifactId>model</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 
