@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.vanyne.reservation.repository.db.mapper.MeetRoomInfoMapper">
-    <resultMap id="BaseResultMap" type="com.vanyne.reservation.repository.db.entity.MeetRoomInfo">
+<mapper namespace="com.vanyne.reservation.infrastruction.repository.db.mapper.MeetRoomInfoMapper">
+    <resultMap id="BaseResultMap" type="com.vanyne.reservation.infrastruction.repository.db.entity.MeetRoomInfo">
         <!--@mbg.generated-->
         <!--@Table t_meet_room_info-->
         <id column="id" jdbcType="INTEGER" property="id"/>

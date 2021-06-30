@@ -1,7 +1,7 @@
 package com.vanyne.reservation.application.impl;
 
-import com.vanyne.reservation.repository.db.entity.MeetRoomInfo;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.vanyne.reservation.infrastruction.repository.db.entity.MeetRoomInfo;
 
 public interface MeetRoomInfoService extends IService<MeetRoomInfo> {
 

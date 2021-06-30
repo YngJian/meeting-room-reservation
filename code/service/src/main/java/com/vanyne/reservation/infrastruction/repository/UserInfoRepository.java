@@ -1,4 +1,4 @@
-package com.vanyne.reservation.repository;
+package com.vanyne.reservation.infrastruction.repository;
 
 /**
  * @author : Yang Jian

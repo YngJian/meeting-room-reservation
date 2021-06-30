@@ -1,10 +1,9 @@
-package com.vanyne.reservation.repository.impl;
+package com.vanyne.reservation.infrastruction.repository.impl;
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.vanyne.reservation.repository.UserInfoRepository;
-import com.vanyne.reservation.repository.db.entity.UserInfo;
-import com.vanyne.reservation.repository.db.mapper.UserInfoMapper;
+import com.vanyne.reservation.infrastruction.repository.UserInfoRepository;
+import com.vanyne.reservation.infrastruction.repository.db.entity.UserInfo;
+import com.vanyne.reservation.infrastruction.repository.db.mapper.UserInfoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 

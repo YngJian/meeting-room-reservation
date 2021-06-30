@@ -1,26 +1,25 @@
-package com.vanyne.reservation.repository.db.entity;
+package com.vanyne.reservation.infrastruction.repository.db.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-
-import java.util.Date;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 /**
- * 会议室信息表
+ * 会议室预约信息表
  */
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@TableName(value = "t_meet_room_info")
-public class MeetRoomInfo {
+@TableName(value = "t_reservation_info")
+public class ReservationInfo {
     /**
      * 主键
      */
@@ -34,16 +33,22 @@ public class MeetRoomInfo {
     private String roomId;
 
     /**
-     * 房间名
+     * 用户id
      */
-    @TableField(value = "room_name")
-    private String roomName;
+    @TableField(value = "user_id")
+    private String userId;
 
     /**
-     * 容量
+     * 预约开始时间
      */
-    @TableField(value = "capacity")
-    private Byte capacity;
+    @TableField(value = "start_time")
+    private Date startTime;
+
+    /**
+     * 预约结束时间
+     */
+    @TableField(value = "end_time")
+    private Date endTime;
 
     /**
      * 创建时间
@@ -61,9 +66,11 @@ public class MeetRoomInfo {
 
     public static final String COL_ROOM_ID = "room_id";
 
-    public static final String COL_ROOM_NAME = "room_name";
+    public static final String COL_USER_ID = "user_id";
 
-    public static final String COL_CAPACITY = "capacity";
+    public static final String COL_START_TIME = "start_time";
+
+    public static final String COL_END_TIME = "end_time";
 
     public static final String COL_CREATE_TIME = "create_time";
 

@@ -1,7 +1,7 @@
 package com.vanyne.reservation.application.impl;
 
-import com.vanyne.reservation.repository.db.entity.UserInfo;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.vanyne.reservation.infrastruction.repository.db.entity.UserInfo;
 import com.vayne.model.model.RegisterRep;
 import com.vayne.model.model.RegisterReq;
 

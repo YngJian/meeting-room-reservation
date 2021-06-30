@@ -1,14 +1,14 @@
 package com.vanyne.reservation.application;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.vanyne.reservation.application.impl.UserInfoService;
-import com.vanyne.reservation.repository.UserInfoRepository;
+import com.vanyne.reservation.infrastruction.repository.UserInfoRepository;
+import com.vanyne.reservation.infrastruction.repository.db.entity.UserInfo;
+import com.vanyne.reservation.infrastruction.repository.db.mapper.UserInfoMapper;
 import com.vayne.model.model.RegisterRep;
 import com.vayne.model.model.RegisterReq;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.vanyne.reservation.repository.db.mapper.UserInfoMapper;
-import com.vanyne.reservation.repository.db.entity.UserInfo;
 
 @Service
 public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> implements UserInfoService {

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.vanyne.reservation.repository.db.mapper.UserInfoMapper">
-    <resultMap id="BaseResultMap" type="com.vanyne.reservation.repository.db.entity.UserInfo">
+<mapper namespace="com.vanyne.reservation.infrastruction.repository.db.mapper.UserInfoMapper">
+    <resultMap id="BaseResultMap" type="com.vanyne.reservation.infrastruction.repository.db.entity.UserInfo">
         <!--@mbg.generated-->
         <!--@Table t_user_info-->
         <id column="id" jdbcType="INTEGER" property="id"/>
