@@ -18,6 +18,7 @@
         <mybatis-plus.version>3.3.1</mybatis-plus.version>
         <druid.version>1.1.22</druid.version>
         <parent.version>0.0.1-SNAPSHOT</parent.version>
+        <hutool.version>4.5.7</hutool.version>
     </properties>
 
     <dependencies>
@@ -30,6 +31,12 @@
             <groupId>com.vayne</groupId>
             <artifactId>client</artifactId>
             <version>${parent.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>${hutool.version}</version>
         </dependency>
         <!--mysql 连接-->
         <dependency>

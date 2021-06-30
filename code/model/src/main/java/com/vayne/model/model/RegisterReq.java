@@ -5,6 +5,7 @@ import lombok.Data;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 /**
  * @author : Yang Jian
@@ -16,6 +17,7 @@ public class RegisterReq {
     private String userName;
 
     @NotNull
+    @Size(min = 1, max = 256)
     private String password;
 
     @NotNull
