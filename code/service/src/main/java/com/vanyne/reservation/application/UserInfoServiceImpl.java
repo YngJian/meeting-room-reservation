@@ -11,6 +11,7 @@ import com.vanyne.reservation.infrastruction.util.AesUtils;
 import com.vayne.model.common.Result;
 import com.vayne.model.model.RegisterRep;
 import com.vayne.model.model.RegisterReq;
+import com.vayne.model.model.RepeatRep;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -65,7 +66,7 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
         UserInfo userInfo = getUserInfo(registerReq);
         this.save(userInfo);
 
-        return new RegisterRep().setResult(CommonResult.RESULT_SUCCESS);
+        return new RegisterRep().setResult(CommonResult.SUCCESS.toResult());
     }
 
     private UserInfo getUserInfo(RegisterReq registerReq) {
@@ -73,5 +74,71 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
         BeanUtil.copyProperties(registerReq, userInfo);
         userInfo.setUserId(UUID.randomUUID().toString().replaceAll("-", ""));
         return userInfo;
+    }
+
+    /**
+     * 用户名是否唯一
+     *
+     * @param userName userName
+     * @return r
+     */
+    @Override
+    public RepeatRep userNameRepeated(String userName) {
+        // 用户名是否唯一
+        int byUserName = userInfoRepository.selectByUserName(userName);
+        if (byUserName > 0) {
+            log.info("User name [{}] is duplicated.", userName);
+            return new RepeatRep()
+                    .setResult(CommonResult.SUCCESS.toResult())
+                    .setRepeated(true);
+        } else {
+            return new RepeatRep()
+                    .setResult(CommonResult.SUCCESS.toResult())
+                    .setRepeated(false);
+        }
+    }
+
+    /**
+     * 手机号是否唯一
+     *
+     * @param phone phone
+     * @return r
+     */
+    @Override
+    public RepeatRep phoneRepeated(String phone) {
+        // 手机号是否唯一
+        int byPhone = userInfoRepository.selectByPhone(phone);
+        if (byPhone > 0) {
+            log.info("Phone [{}] is duplicated.", phone);
+            return new RepeatRep()
+                    .setResult(CommonResult.SUCCESS.toResult())
+                    .setRepeated(true);
+        } else {
+            return new RepeatRep()
+                    .setResult(CommonResult.SUCCESS.toResult())
+                    .setRepeated(false);
+        }
+    }
+
+    /**
+     * 邮箱是否唯一
+     *
+     * @param email email
+     * @return r
+     */
+    @Override
+    public RepeatRep emailRepeated(String email) {
+        // Email是否唯一
+        int byEmail = userInfoRepository.selectByEmail(email);
+        if (byEmail > 0) {
+            log.info("Email [{}] is duplicated.", email);
+            return new RepeatRep()
+                    .setResult(CommonResult.SUCCESS.toResult())
+                    .setRepeated(true);
+        } else {
+            return new RepeatRep()
+                    .setResult(CommonResult.SUCCESS.toResult())
+                    .setRepeated(false);
+        }
     }
 }

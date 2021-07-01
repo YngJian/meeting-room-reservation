@@ -7,10 +7,6 @@ public enum CommonResult {
     FAILED(1, "failed"),
     INVALID_PARAM(-1, "success");
 
-    public static final Result RESULT_SUCCESS = new Result(SUCCESS.getCode(), SUCCESS.getMsg());
-    public static final Result RESULT_FAILED = new Result(FAILED.getCode(), FAILED.getMsg());
-    public static final Result RESULT_INVALID_PARAM = new Result(INVALID_PARAM.getCode(), INVALID_PARAM.getMsg());
-
     private final int code;
     private final String msg;
 
@@ -25,5 +21,9 @@ public enum CommonResult {
 
     public String getMsg() {
         return msg;
+    }
+
+    public Result toResult() {
+        return new Result(code, msg);
     }
 }

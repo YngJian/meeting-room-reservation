@@ -4,13 +4,12 @@ import com.vanyne.reservation.application.impl.UserInfoService;
 import com.vayne.model.api.UserInfoApi;
 import com.vayne.model.model.RegisterRep;
 import com.vayne.model.model.RegisterReq;
+import com.vayne.model.model.RepeatRep;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 /**
  * @author : Yang Jian
@@ -22,9 +21,51 @@ public class UserInfoController implements UserInfoApi {
     @Autowired
     private UserInfoService userInfoService;
 
+    /**
+     * 注册
+     *
+     * @param registerReq r
+     * @return r
+     */
     @PostMapping("/register")
     @Override
     public RegisterRep register(@RequestBody @Valid RegisterReq registerReq) {
         return userInfoService.register(registerReq);
+    }
+
+    /**
+     * 用户名是否唯一
+     *
+     * @param userName userName
+     * @return r
+     */
+    @GetMapping("/name/{userName}")
+    @Override
+    public RepeatRep userNameRepeated(@PathVariable @NotNull String userName) {
+        return userInfoService.userNameRepeated(userName);
+    }
+
+    /**
+     * 手机号是否唯一
+     *
+     * @param phone phone
+     * @return r
+     */
+    @GetMapping("/phone/{phone}")
+    @Override
+    public RepeatRep phoneRepeated(@PathVariable @NotNull String phone) {
+        return userInfoService.phoneRepeated(phone);
+    }
+
+    /**
+     * 邮箱是否唯一
+     *
+     * @param email email
+     * @return r
+     */
+    @GetMapping("/email/{email}")
+    @Override
+    public RepeatRep emailRepeated(@PathVariable @NotNull String email) {
+        return userInfoService.emailRepeated(email);
     }
 }
