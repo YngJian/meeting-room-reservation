@@ -1,12 +1,10 @@
 package com.vanyne.reservation.application.impl;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.vanyne.reservation.infrastruction.repository.db.entity.UserInfo;
-import com.vayne.model.model.RegisterRep;
-import com.vayne.model.model.RegisterReq;
-import com.vayne.model.model.RepeatRep;
+import com.vanyne.reservation.infrastruction.repository.db.entity.UserInfoEntity;
+import com.vayne.model.model.*;
 
-public interface UserInfoService extends IService<UserInfo> {
+public interface UserInfoService extends IService<UserInfoEntity> {
     /**
      * 注册
      *
@@ -38,4 +36,12 @@ public interface UserInfoService extends IService<UserInfo> {
      * @return r
      */
     RepeatRep emailRepeated(String email);
+
+    /**
+     * 登录
+     *
+     * @param loginReq l
+     * @return r
+     */
+    LoginRep login(LoginReq loginReq);
 }

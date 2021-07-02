@@ -2,9 +2,7 @@ package com.vanyne.reservation.interfaces.impl;
 
 import com.vanyne.reservation.application.impl.UserInfoService;
 import com.vayne.model.api.UserInfoApi;
-import com.vayne.model.model.RegisterRep;
-import com.vayne.model.model.RegisterReq;
-import com.vayne.model.model.RepeatRep;
+import com.vayne.model.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -67,5 +65,17 @@ public class UserInfoController implements UserInfoApi {
     @Override
     public RepeatRep emailRepeated(@PathVariable @NotNull String email) {
         return userInfoService.emailRepeated(email);
+    }
+
+    /**
+     * 登录
+     *
+     * @param loginReq r
+     * @return r
+     */
+    @PostMapping("/login")
+    @Override
+    public LoginRep login(@RequestBody @Valid @NotNull LoginReq loginReq) {
+        return userInfoService.login(loginReq);
     }
 }

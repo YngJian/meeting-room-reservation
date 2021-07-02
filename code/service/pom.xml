@@ -19,6 +19,7 @@
         <druid.version>1.1.22</druid.version>
         <parent.version>0.0.1-SNAPSHOT</parent.version>
         <hutool.version>4.5.7</hutool.version>
+        <jwt.version>0.9.1</jwt.version>
     </properties>
 
     <dependencies>
@@ -26,6 +27,7 @@
             <groupId>com.vayne</groupId>
             <artifactId>model</artifactId>
             <version>${parent.version}</version>
+
         </dependency>
         <dependency>
             <groupId>com.vayne</groupId>
@@ -33,22 +35,39 @@
             <version>${parent.version}</version>
         </dependency>
 
+        <!--hutool-->
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
             <version>${hutool.version}</version>
         </dependency>
+
+        <!--redis-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+
+        <!--jwt-->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>${jwt.version}</version>
+        </dependency>
+
         <!--mysql 连接-->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
         </dependency>
+
         <!--mybatis-plus-->
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
             <version>${mybatis-plus.version}</version>
         </dependency>
+
         <!-- 引入Druid依赖 -->
         <dependency>
             <groupId>com.alibaba</groupId>

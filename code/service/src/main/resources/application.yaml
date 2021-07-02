@@ -27,6 +27,13 @@ spring:
     testWhileIdle: true
     testOnBorrow: false
     testOnReturn: false
+
+  redis:
+    host: 127.0.0.1
+    database: 0
+    port: 6379
+    password:
+
 # mybatis-plus相关配置
 mybatis-plus:
   # xml扫描，多个目录用逗号或者分号分隔（告诉 Mapper 所对应的 XML 文件位置）

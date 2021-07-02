@@ -19,7 +19,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @TableName(value = "t_meet_room_info")
-public class MeetRoomInfo {
+public class MeetRoomInfoEntity {
     /**
      * 主键
      */

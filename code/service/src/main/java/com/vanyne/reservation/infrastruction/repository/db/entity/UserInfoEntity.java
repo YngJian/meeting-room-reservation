@@ -12,25 +12,19 @@ import lombok.NoArgsConstructor;
 import java.util.Date;
 
 /**
- * 会议室预约信息表
+ * 用户信息表
  */
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@TableName(value = "t_reservation_info")
-public class ReservationInfo {
+@TableName(value = "t_user_info")
+public class UserInfoEntity {
     /**
      * 主键
      */
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
-
-    /**
-     * 房间id
-     */
-    @TableField(value = "room_id")
-    private String roomId;
 
     /**
      * 用户id
@@ -39,16 +33,30 @@ public class ReservationInfo {
     private String userId;
 
     /**
-     * 预约开始时间
+     * 用户名
      */
-    @TableField(value = "start_time")
-    private Date startTime;
+    @TableField(value = "user_name")
+    private String userName;
 
     /**
-     * 预约结束时间
+     * 登录密码
      */
-    @TableField(value = "end_time")
-    private Date endTime;
+    @TableField(value = "password")
+    private String password;
+
+    /**
+     * 用户手机号
+     */
+    @TableField(value = "phone")
+    private String phone;
+
+    /**
+     * 用户邮箱号
+     */
+    @TableField(value = "email")
+    private String email;
+
+    public static final String COL_STATUS = "status";
 
     /**
      * 创建时间
@@ -64,13 +72,20 @@ public class ReservationInfo {
 
     public static final String COL_ID = "id";
 
-    public static final String COL_ROOM_ID = "room_id";
-
     public static final String COL_USER_ID = "user_id";
 
-    public static final String COL_START_TIME = "start_time";
+    public static final String COL_USER_NAME = "user_name";
 
-    public static final String COL_END_TIME = "end_time";
+    public static final String COL_PASSWORD = "password";
+
+    public static final String COL_PHONE = "phone";
+
+    public static final String COL_EMAIL = "email";
+    /**
+     * 用户状态：1正常，0被锁，-1弃用
+     */
+    @TableField(value = "status")
+    private Integer status;
 
     public static final String COL_CREATE_TIME = "create_time";
 

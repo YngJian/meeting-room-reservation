@@ -1,5 +1,7 @@
 package com.vanyne.reservation.infrastruction.repository;
 
+import com.vanyne.reservation.infrastruction.repository.db.entity.UserInfoEntity;
+
 /**
  * @author : Yang Jian
  * @date : 2021/6/28 0028 22:51
@@ -11,7 +13,15 @@ public interface UserInfoRepository {
      * @param userName userName
      * @return int
      */
-    int selectByUserName(String userName);
+    int selectCountByUserName(String userName);
+
+    /**
+     * 根据用户名查询
+     *
+     * @param userName userName
+     * @return int
+     */
+    UserInfoEntity selectUserByUserName(String userName);
 
     /**
      * 手机号是否唯一

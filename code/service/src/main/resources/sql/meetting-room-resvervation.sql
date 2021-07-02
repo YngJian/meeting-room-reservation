@@ -7,6 +7,7 @@ CREATE TABLE `t_user_info`
     `password`    varchar(256) CHARACTER SET utf8 NOT NULL COMMENT '登录密码',
     `phone`       varchar(16) CHARACTER SET utf8  NOT NULL COMMENT '用户手机号',
     `email`       varchar(64) CHARACTER SET utf8  NOT NULL COMMENT '用户邮箱号',
+    `status`      tinyint                         NOT NULL DEFAULT 1 COMMENT '用户状态：1正常，0被锁，-1弃用',
     `create_time` datetime(0)                     NOT NULL DEFAULT CURRENT_TIMESTAMP() COMMENT '创建时间',
     `update_time` datetime(0)                     NOT NULL DEFAULT CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '更新时间',
     PRIMARY KEY (`id`),

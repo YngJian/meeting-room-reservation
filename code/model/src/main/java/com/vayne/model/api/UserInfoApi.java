@@ -1,8 +1,6 @@
 package com.vayne.model.api;
 
-import com.vayne.model.model.RegisterRep;
-import com.vayne.model.model.RegisterReq;
-import com.vayne.model.model.RepeatRep;
+import com.vayne.model.model.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -39,4 +37,12 @@ public interface UserInfoApi {
      * @return r
      */
     RepeatRep emailRepeated(@NotNull String email);
+
+    /**
+     * 登录
+     *
+     * @param loginReq l
+     * @return r
+     */
+    LoginRep login(@Valid @NotNull LoginReq loginReq);
 }
