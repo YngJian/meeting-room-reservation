@@ -11,18 +11,15 @@ import javax.validation.constraints.Size;
 
 /**
  * @author : Yang Jian
- * @date : 2021/7/2 0002 21:18
+ * @date : 2021/7/4 0004 16:56
  */
 @Data
 @Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
-public class LoginReq {
+public class UnlockReq {
     @NotNull
     @NotEmpty
-    private String userName;
-
-    @NotNull
     @Size(min = 1, max = 256)
-    private String password;
+    private String userName;
 }

@@ -78,4 +78,29 @@ public class UserInfoController implements UserInfoApi {
     public LoginRep login(@RequestBody @Valid @NotNull LoginReq loginReq) {
         return userInfoService.login(loginReq);
     }
+
+    /**
+     * 修改密码
+     *
+     * @param modifyPwdReq modifyPwdReq
+     * @return r
+     */
+    @PutMapping("/change/password")
+    @Override
+    public ModifyPwdRep modifyPwd(@Valid @NotNull @RequestBody ModifyPwdReq modifyPwdReq,
+                                  @RequestHeader(value = "token") String token) {
+        return userInfoService.modifyPwd(modifyPwdReq, token);
+    }
+
+    /**
+     * 解锁用户
+     *
+     * @param unlockReq unlockReq
+     * @return r
+     */
+    @PutMapping("/unlock")
+    @Override
+    public UnlockRep unlockUser(@RequestBody @Valid UnlockReq unlockReq) {
+        return userInfoService.unlockUser(unlockReq);
+    }
 }

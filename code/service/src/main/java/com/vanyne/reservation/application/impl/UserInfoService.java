@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.vanyne.reservation.infrastruction.repository.db.entity.UserInfoEntity;
 import com.vayne.model.model.*;
 
+import javax.validation.Valid;
+
 public interface UserInfoService extends IService<UserInfoEntity> {
     /**
      * 注册
@@ -44,4 +46,21 @@ public interface UserInfoService extends IService<UserInfoEntity> {
      * @return r
      */
     LoginRep login(LoginReq loginReq);
+
+    /**
+     * 修改密码
+     *
+     * @param modifyPwdReq modifyPwdReq
+     * @param token        token
+     * @return r
+     */
+    ModifyPwdRep modifyPwd(ModifyPwdReq modifyPwdReq, String token);
+
+    /**
+     * 解锁账户
+     *
+     * @param unlockReq unlockReq
+     * @return r
+     */
+    UnlockRep unlockUser(@Valid UnlockReq unlockReq);
 }

@@ -22,7 +22,7 @@ import java.util.List;
 @ControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
-    @ExceptionHandler(value = {MethodArgumentNotValidException.class, BindException.class, Exception.class})
+    @ExceptionHandler(value = Exception.class)
     @ResponseBody
     public Result MyExceptionHandle(Exception exception) {
         log.error(exception.getMessage(), exception);
@@ -40,9 +40,8 @@ public class GlobalExceptionHandler {
         StringBuilder errorMsg = new StringBuilder();
         if (result.hasErrors()) {
             List<FieldError> fieldErrors = result.getFieldErrors();
-            fieldErrors.forEach(error -> {
-                errorMsg.append(error.getField()).append(": ").append(error.getDefaultMessage()).append("!");
-            });
+            fieldErrors.forEach(error ->
+                    errorMsg.append(error.getField()).append(": ").append(error.getDefaultMessage()).append("!"));
         }
         return new Result(CommonResult.FAILED.getCode(), errorMsg.toString());
     }

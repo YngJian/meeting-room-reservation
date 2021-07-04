@@ -49,4 +49,32 @@ public class UserInfoRepositoryImpl implements UserInfoRepository {
         userInfoWrapper.eq(UserInfoEntity.COL_EMAIL, email);
         return userInfoMapper.selectCount(userInfoWrapper);
     }
+
+    /**
+     * 修改密码
+     *
+     * @param userName       userName
+     * @param userInfoEntity userInfoEntity
+     * @return int
+     */
+    @Override
+    public Integer updateByUserName(String userName, UserInfoEntity userInfoEntity) {
+        QueryWrapper<UserInfoEntity> userInfoWrapper = new QueryWrapper<>();
+        userInfoWrapper.eq(UserInfoEntity.COL_USER_NAME, userName);
+        return userInfoMapper.update(userInfoEntity, userInfoWrapper);
+    }
+
+    /**
+     * 修改状态
+     *
+     * @param userId         userId
+     * @param userInfoEntity userInfoEntity
+     * @return int
+     */
+    @Override
+    public Integer updateByUserId(String userId, UserInfoEntity userInfoEntity) {
+        QueryWrapper<UserInfoEntity> userInfoWrapper = new QueryWrapper<>();
+        userInfoWrapper.eq(UserInfoEntity.COL_USER_ID, userId);
+        return userInfoMapper.update(userInfoEntity, userInfoWrapper);
+    }
 }

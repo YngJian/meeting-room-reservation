@@ -20,6 +20,7 @@
         <parent.version>0.0.1-SNAPSHOT</parent.version>
         <hutool.version>4.5.7</hutool.version>
         <jwt.version>0.9.1</jwt.version>
+        <fastjson.version>1.2.62</fastjson.version>
     </properties>
 
     <dependencies>
@@ -33,6 +34,13 @@
             <groupId>com.vayne</groupId>
             <artifactId>client</artifactId>
             <version>${parent.version}</version>
+        </dependency>
+
+        <!--fastjson-->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>${fastjson.version}</version>
         </dependency>
 
         <!--hutool-->

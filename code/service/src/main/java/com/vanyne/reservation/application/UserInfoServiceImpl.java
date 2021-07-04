@@ -2,9 +2,11 @@ package com.vanyne.reservation.application;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.json.JSONUtil;
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.vanyne.reservation.application.impl.UserInfoService;
 import com.vanyne.reservation.domain.enums.CommonResult;
+import com.vanyne.reservation.infrastruction.common.ConstantType;
 import com.vanyne.reservation.infrastruction.common.UserStatusType;
 import com.vanyne.reservation.infrastruction.repository.UserInfoRepository;
 import com.vanyne.reservation.infrastruction.repository.db.entity.UserInfoEntity;
@@ -17,27 +19,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
+import javax.validation.Valid;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 @Service
 @Slf4j
 public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfoEntity> implements UserInfoService {
-    private static final String AES_KEY = "vaynevaynevaynev";
-
-    private static final Integer PWD_MAX_RETRY_TIME = 5;
-
-    private static final String PWD_WRONG_KEY = "reservation:pwd:retry";
-
-    private static final String PWD_AUTO_UNLOCK_KEY = "reservation:pwd:unlock";
-
-    private static final String TOKEN_KEY = "token:";
-
-    private static final long TOKEN_EXPIRE_MINUTES = 30;
-
-    private static final long PWD_WRONG_EXPIRE_HOURS = 24;
-
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
 
@@ -53,7 +43,7 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfoEnt
 
         // 密码加密格式是否正确
         try {
-            AesUtils.decode(AES_KEY, password);
+            AesUtils.decode(ConstantType.AES_KEY, password);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             return new RegisterRep()
@@ -213,11 +203,11 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfoEnt
         String token = JwtUtils.generateToken(userInfoEntity.getUserId());
 
         // 设置redis
-        stringRedisTemplate.opsForValue().set(TOKEN_KEY + token,
-                JSONUtil.toJsonStr(userInfo), TOKEN_EXPIRE_MINUTES, TimeUnit.MINUTES);
+        stringRedisTemplate.opsForValue().set(ConstantType.TOKEN_KEY + token,
+                JSONUtil.toJsonStr(userInfo), ConstantType.TOKEN_EXPIRE_MINUTES, TimeUnit.MINUTES);
 
         // 删除之前错误次数
-        stringRedisTemplate.delete(PWD_WRONG_KEY + ":" + userInfoEntity.getUserId());
+        stringRedisTemplate.delete(ConstantType.PWD_WRONG_KEY + userInfoEntity.getUserId());
 
         return new LoginRep()
                 .setResult(CommonResult.SUCCESS.toResult())
@@ -226,12 +216,12 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfoEnt
     }
 
     private LoginRep pwdWrongRep(String userName, UserInfoEntity userInfoEntity) {
-        Long wrongTimes = stringRedisTemplate.opsForValue().increment(PWD_WRONG_KEY + ":" + userInfoEntity.getUserId());
-        if (wrongTimes != null && wrongTimes < PWD_MAX_RETRY_TIME) {
+        Long wrongTimes = stringRedisTemplate.opsForValue().increment(ConstantType.PWD_WRONG_KEY + userInfoEntity.getUserId());
+        if (wrongTimes != null && wrongTimes < ConstantType.PWD_MAX_RETRY_TIME) {
             // 返回剩余错误次数
-            int remainTimes = (int) (PWD_MAX_RETRY_TIME - wrongTimes);
-            stringRedisTemplate.opsForValue().set(PWD_WRONG_KEY + ":" + userInfoEntity.getUserId(),
-                    String.valueOf(wrongTimes), PWD_WRONG_EXPIRE_HOURS, TimeUnit.HOURS);
+            int remainTimes = (int) (ConstantType.PWD_MAX_RETRY_TIME - wrongTimes);
+            stringRedisTemplate.opsForValue().set(ConstantType.PWD_WRONG_KEY + userInfoEntity.getUserId(),
+                    String.valueOf(wrongTimes), ConstantType.PWD_WRONG_EXPIRE_HOURS, TimeUnit.HOURS);
             log.info("Incorrect password. username: [{}]. remaining times：[{}].", userName, remainTimes);
             return new LoginRep()
                     .setResult(
@@ -248,8 +238,8 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfoEnt
 
             // 锁定成功设置redis自动解锁过期键
             if (updateById) {
-                stringRedisTemplate.opsForValue().set(PWD_AUTO_UNLOCK_KEY + ":" + userInfoEntity.getUserId(),
-                        userInfoEntity.getUserId(), PWD_WRONG_EXPIRE_HOURS, TimeUnit.HOURS);
+                stringRedisTemplate.opsForValue().set(ConstantType.PWD_AUTO_UNLOCK_KEY + userInfoEntity.getUserId(),
+                        userInfoEntity.getUserId(), ConstantType.PWD_WRONG_EXPIRE_HOURS, TimeUnit.HOURS);
             }
 
             log.info("Account locked，username: [{}].", userName);
@@ -258,5 +248,108 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfoEnt
                             new Result(CommonResult.INVALID_PARAM.getCode(), "Account locked，"))
                     .setLocked(true);
         }
+    }
+
+    /**
+     * 修改密码
+     *
+     * @param modifyPwdReq modifyPwdReq
+     * @param token        token
+     * @return r
+     */
+    @Override
+    public ModifyPwdRep modifyPwd(ModifyPwdReq modifyPwdReq, String token) {
+        String user = stringRedisTemplate.opsForValue().get(ConstantType.TOKEN_KEY + token);
+        if (StringUtils.isEmpty(user)) {
+            log.info("The token [{}] has expired please log in again", token);
+            return new ModifyPwdRep()
+                    .setResult(
+                            new Result(CommonResult.INVALID_PARAM.getCode(), "The token has expired, please log in again!"));
+        }
+
+        // 密码加密格式是否正确
+        String newPwd = modifyPwdReq.getNewPwd();
+        try {
+            AesUtils.decode(ConstantType.AES_KEY, newPwd);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return new ModifyPwdRep()
+                    .setResult(new Result(CommonResult.INVALID_PARAM.getCode(), "The password format is incorrect."));
+        }
+
+        UserInfo userInfo = JSON.parseObject(user, UserInfo.class);
+        String userName = userInfo.getUserName();
+
+        // 用户名是否正确
+        UserInfoEntity userInfoEntity = userInfoRepository.selectUserByUserName(userName);
+        if (userInfoEntity == null) {
+            log.info("Username does not exist. token: [{}]", token);
+            return new ModifyPwdRep()
+                    .setResult(
+                            new Result(CommonResult.INVALID_PARAM.getCode(), "Username does not exist."));
+        }
+
+        // 与旧密码是否相同
+        String password = userInfoEntity.getPassword();
+        if (password.equals(newPwd)) {
+            log.info("The new password is the same as the old password,token:[{}]", token);
+            return new ModifyPwdRep()
+                    .setResult(
+                            new Result(CommonResult.INVALID_PARAM.getCode(), "The new password is the same as the old password."));
+        }
+
+        // 修改密码
+        UserInfoEntity infoEntity = UserInfoEntity.builder()
+                .password(newPwd)
+                .build();
+        Integer integer = userInfoRepository.updateByUserName(userName, infoEntity);
+        if (integer == 0) {
+            log.info("Failed to change the password.token:[{}]", token);
+            return new ModifyPwdRep()
+                    .setResult(
+                            new Result(CommonResult.FAILED.getCode(), "Failed to change the password."));
+        }
+
+        return new ModifyPwdRep()
+                .setResult(CommonResult.SUCCESS.toResult());
+    }
+
+    /**
+     * 解锁账户
+     *
+     * @param unlockReq unlockReq
+     * @return r
+     */
+    @Override
+    public UnlockRep unlockUser(@Valid UnlockReq unlockReq) {
+        String userName = unlockReq.getUserName();
+
+        // 用户名是否存在
+        UserInfoEntity infoEntity = userInfoRepository.selectUserByUserName(userName);
+        if (infoEntity == null) {
+            log.info("User name [{}] is not exist.", userName);
+            return new UnlockRep()
+                    .setResult(
+                            new Result(CommonResult.INVALID_PARAM.getCode(), "User name is not exist."));
+        }
+
+        // 解锁
+        UserInfoEntity userInfoEntity = UserInfoEntity.builder()
+                .status(UserStatusType.NORMAL)
+                .build();
+        Integer integer = userInfoRepository.updateByUserName(userName, userInfoEntity);
+        if (integer == 0) {
+            log.info("Unlock failed. user name [{}].", userName);
+            return new UnlockRep()
+                    .setResult(
+                            new Result(CommonResult.FAILED.getCode(), "Unlock failed."));
+        }
+
+        // 删除redis密码错误次数
+        stringRedisTemplate.delete(ConstantType.PWD_WRONG_KEY + infoEntity.getUserId());
+        stringRedisTemplate.delete(ConstantType.PWD_AUTO_UNLOCK_KEY + infoEntity.getUserId());
+
+        return new UnlockRep()
+                .setResult(CommonResult.SUCCESS.toResult());
     }
 }

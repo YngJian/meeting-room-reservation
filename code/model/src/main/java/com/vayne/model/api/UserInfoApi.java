@@ -45,4 +45,21 @@ public interface UserInfoApi {
      * @return r
      */
     LoginRep login(@Valid @NotNull LoginReq loginReq);
+
+    /**
+     * 修改密码
+     *
+     * @param modifyPwdReq l
+     * @param token        l
+     * @return r
+     */
+    ModifyPwdRep modifyPwd(@Valid ModifyPwdReq modifyPwdReq, String token);
+
+    /**
+     * 解锁账户
+     *
+     * @param unlockReq unlockReq
+     * @return r
+     */
+    UnlockRep unlockUser(@Valid UnlockReq unlockReq);
 }

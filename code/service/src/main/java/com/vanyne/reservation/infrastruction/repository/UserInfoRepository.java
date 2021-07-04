@@ -38,4 +38,22 @@ public interface UserInfoRepository {
      * @return int
      */
     int selectByEmail(String email);
+
+    /**
+     * 修改密码
+     *
+     * @param userName       userName
+     * @param userInfoEntity userInfoEntity
+     * @return int
+     */
+    Integer updateByUserName(String userName, UserInfoEntity userInfoEntity);
+
+    /**
+     * 修改状态
+     *
+     * @param userId         userId
+     * @param userInfoEntity userInfoEntity
+     * @return int
+     */
+    Integer updateByUserId(String userId, UserInfoEntity userInfoEntity);
 }

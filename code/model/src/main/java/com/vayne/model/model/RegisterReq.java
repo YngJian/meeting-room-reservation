@@ -2,10 +2,7 @@ package com.vayne.model.model;
 
 import lombok.Data;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 
 /**
  * @author : Yang Jian
@@ -14,6 +11,8 @@ import javax.validation.constraints.Size;
 @Data
 public class RegisterReq {
     @NotNull
+    @NotEmpty
+    @Size(min = 1, max = 64)
     private String userName;
 
     @NotNull
@@ -21,10 +20,12 @@ public class RegisterReq {
     private String password;
 
     @NotNull
+    @NotEmpty
     @Pattern(regexp = "1[0-9]{10}", message = "手机号格式不正确！")
     private String phone;
 
     @NotNull
+    @NotEmpty
     @Email(message = "邮箱格式错误")
     private String email;
 }

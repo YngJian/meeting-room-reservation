@@ -8,22 +8,12 @@ import lombok.experimental.Accessors;
 
 /**
  * @author : Yang Jian
- * @date : 2021/7/2 0002 21:22
+ * @date : 2021/7/4 0004 16:56
  */
 @Data
 @Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
-public class LoginRep {
+public class UnlockRep {
     private Result result;
-
-    private Integer remainTimes;
-
-    private boolean pwdWrong;
-
-    private boolean locked;
-
-    private String token;
-
-    private UserInfo userInfo;
 }
