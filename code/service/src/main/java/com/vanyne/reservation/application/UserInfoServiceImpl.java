@@ -56,36 +56,43 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfoEnt
             AesUtils.decode(AES_KEY, password);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            return new RegisterRep().setResult(new Result(CommonResult.INVALID_PARAM.getCode(),
-                    "The password format is incorrect."));
+            return new RegisterRep()
+                    .setResult(new Result(CommonResult.INVALID_PARAM.getCode(), "The password format is incorrect."));
         }
 
         // 用户名是否唯一
         int byUserName = userInfoRepository.selectCountByUserName(userName);
         if (byUserName > 0) {
             log.info("User name [{}] is duplicated.", userName);
-            return new RegisterRep().setResult(new Result(CommonResult.INVALID_PARAM.getCode(), "User name is duplicated."));
+            return new RegisterRep()
+                    .setResult(
+                            new Result(CommonResult.INVALID_PARAM.getCode(), "User name is duplicated."));
         }
 
         // 手机号是否唯一
         int byPhone = userInfoRepository.selectByPhone(phone);
         if (byPhone > 0) {
             log.info("Phone [{}] is duplicated.", phone);
-            return new RegisterRep().setResult(new Result(CommonResult.INVALID_PARAM.getCode(), "Phone is duplicated."));
+            return new RegisterRep()
+                    .setResult(
+                            new Result(CommonResult.INVALID_PARAM.getCode(), "Phone is duplicated."));
         }
 
         // Email是否唯一
         int byEmail = userInfoRepository.selectByEmail(email);
         if (byEmail > 0) {
             log.info("Email [{}] is duplicated.", email);
-            return new RegisterRep().setResult(new Result(CommonResult.INVALID_PARAM.getCode(), "Email is duplicated."));
+            return new RegisterRep()
+                    .setResult(
+                            new Result(CommonResult.INVALID_PARAM.getCode(), "Email is duplicated."));
         }
 
         // 插入用户
         UserInfoEntity userInfoEntity = getUserInfo(registerReq);
         this.save(userInfoEntity);
 
-        return new RegisterRep().setResult(CommonResult.SUCCESS.toResult());
+        return new RegisterRep()
+                .setResult(CommonResult.SUCCESS.toResult());
     }
 
     private UserInfoEntity getUserInfo(RegisterReq registerReq) {
@@ -177,16 +184,17 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfoEnt
         if (userInfoEntity == null) {
             log.info("Username [{}] does not exist.", userName);
             return new LoginRep()
-                    .setResult(new Result(CommonResult.INVALID_PARAM.getCode(),
-                            "Username does not exist."));
+                    .setResult(
+                            new Result(CommonResult.INVALID_PARAM.getCode(), "Username does not exist."));
         }
 
         // 账户是否正常
         if (!UserStatusType.NORMAL.equals(userInfoEntity.getStatus())) {
             log.info("Account is not normal. username: [{}].", userName);
             return new LoginRep()
-                    .setResult(new Result(CommonResult.INVALID_PARAM.getCode(),
-                            "Account is not normal."));
+                    .setResult(
+                            new Result(CommonResult.INVALID_PARAM.getCode(), "Account is not normal."))
+                    .setLocked(true);
         }
 
         // 密码是否正确
@@ -226,9 +234,10 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfoEnt
                     String.valueOf(wrongTimes), PWD_WRONG_EXPIRE_HOURS, TimeUnit.HOURS);
             log.info("Incorrect password. username: [{}]. remaining times：[{}].", userName, remainTimes);
             return new LoginRep()
-                    .setResult(new Result(CommonResult.INVALID_PARAM.getCode(),
-                            "Incorrect password."))
-                    .setRemainTimes(remainTimes);
+                    .setResult(
+                            new Result(CommonResult.INVALID_PARAM.getCode(), "Incorrect password."))
+                    .setRemainTimes(remainTimes)
+                    .setPwdWrong(true);
         } else {
             // 锁定账户
             UserInfoEntity infoEntity = UserInfoEntity.builder()
@@ -244,8 +253,10 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfoEnt
             }
 
             log.info("Account locked，username: [{}].", userName);
-            return new LoginRep().setResult(new Result(CommonResult.INVALID_PARAM.getCode(),
-                    "Account locked，"));
+            return new LoginRep()
+                    .setResult(
+                            new Result(CommonResult.INVALID_PARAM.getCode(), "Account locked，"))
+                    .setLocked(true);
         }
     }
 }

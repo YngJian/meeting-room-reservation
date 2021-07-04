@@ -19,6 +19,10 @@ public class LoginRep {
 
     private int remainTimes;
 
+    private boolean pwdWrong;
+
+    private boolean locked;
+
     private String token;
 
     private UserInfo userInfo;
