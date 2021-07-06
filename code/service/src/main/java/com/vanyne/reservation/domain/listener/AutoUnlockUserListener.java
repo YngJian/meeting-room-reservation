@@ -1,7 +1,7 @@
 package com.vanyne.reservation.domain.listener;
 
 import com.vanyne.reservation.infrastruction.common.ConstantType;
-import com.vanyne.reservation.infrastruction.common.UserStatusType;
+import com.vanyne.reservation.infrastruction.common.StatusType;
 import com.vanyne.reservation.infrastruction.repository.UserInfoRepository;
 import com.vanyne.reservation.infrastruction.repository.db.entity.UserInfoEntity;
 import lombok.extern.slf4j.Slf4j;
@@ -54,7 +54,7 @@ public class AutoUnlockUserListener extends KeyExpirationEventMessageListener {
         }
 
         UserInfoEntity userInfoEntity = UserInfoEntity.builder()
-                .status(UserStatusType.NORMAL)
+                .status(StatusType.NORMAL)
                 .build();
         userInfoRepository.updateByUserId(userId, userInfoEntity);
     }

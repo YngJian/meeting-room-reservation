@@ -34,7 +34,7 @@ public class GlobalExceptionHandler {
         }
 
         if (result == null) {
-            return CommonResult.FAILED.toResult();
+            return new Result(CommonResult.FAILED.getCode(), exception.getMessage());
         }
 
         StringBuilder errorMsg = new StringBuilder();

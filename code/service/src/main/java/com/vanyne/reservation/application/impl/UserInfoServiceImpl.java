@@ -1,17 +1,18 @@
-package com.vanyne.reservation.application;
+package com.vanyne.reservation.application.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.vanyne.reservation.application.impl.UserInfoService;
+import com.vanyne.reservation.application.UserInfoService;
 import com.vanyne.reservation.domain.enums.CommonResult;
 import com.vanyne.reservation.infrastruction.common.ConstantType;
-import com.vanyne.reservation.infrastruction.common.UserStatusType;
+import com.vanyne.reservation.infrastruction.common.StatusType;
 import com.vanyne.reservation.infrastruction.repository.UserInfoRepository;
 import com.vanyne.reservation.infrastruction.repository.db.entity.UserInfoEntity;
 import com.vanyne.reservation.infrastruction.repository.db.mapper.UserInfoMapper;
 import com.vanyne.reservation.infrastruction.util.AesUtils;
+import com.vanyne.reservation.infrastruction.util.CommonUtils;
 import com.vanyne.reservation.infrastruction.util.JwtUtils;
 import com.vayne.model.common.Result;
 import com.vayne.model.model.*;
@@ -22,7 +23,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.validation.Valid;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -88,7 +88,7 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfoEnt
     private UserInfoEntity getUserInfo(RegisterReq registerReq) {
         UserInfoEntity userInfoEntity = new UserInfoEntity();
         BeanUtil.copyProperties(registerReq, userInfoEntity);
-        userInfoEntity.setUserId(UUID.randomUUID().toString().replaceAll("-", ""));
+        userInfoEntity.setUserId(CommonUtils.getUUID());
         return userInfoEntity;
     }
 
@@ -179,7 +179,7 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfoEnt
         }
 
         // 账户是否正常
-        if (!UserStatusType.NORMAL.equals(userInfoEntity.getStatus())) {
+        if (!StatusType.NORMAL.equals(userInfoEntity.getStatus())) {
             log.info("Account is not normal. username: [{}].", userName);
             return new LoginRep()
                     .setResult(
@@ -232,7 +232,7 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfoEnt
             // 锁定账户
             UserInfoEntity infoEntity = UserInfoEntity.builder()
                     .id(userInfoEntity.getId())
-                    .status(UserStatusType.DISABLE)
+                    .status(StatusType.DISABLE)
                     .build();
             boolean updateById = this.updateById(infoEntity);
 
@@ -335,7 +335,7 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfoEnt
 
         // 解锁
         UserInfoEntity userInfoEntity = UserInfoEntity.builder()
-                .status(UserStatusType.NORMAL)
+                .status(StatusType.NORMAL)
                 .build();
         Integer integer = userInfoRepository.updateByUserName(userName, userInfoEntity);
         if (integer == 0) {

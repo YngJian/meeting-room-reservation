@@ -1,21 +1,23 @@
 package com.vayne.model.model;
 
+import com.vayne.model.common.Result;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
+import java.util.List;
+
 /**
  * @author : Yang Jian
- * @date : 2021/7/2 0002 21:47
+ * @date : 2021/7/6 0006 21:46
  */
 @Data
 @Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserInfo {
-    private String userId;
-    private String userName;
-    private String phone;
-    private String email;
+public class ListMeetRoomRep {
+    private Result result;
+    private Integer total;
+    private List<MeetRoomInfo> meetRoomInfo;
 }

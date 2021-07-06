@@ -1,4 +1,4 @@
-package com.vanyne.reservation.application.impl;
+package com.vanyne.reservation.application;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.vanyne.reservation.infrastruction.repository.db.entity.ReservationInfoEntity;

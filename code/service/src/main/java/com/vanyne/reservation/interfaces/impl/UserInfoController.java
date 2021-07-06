@@ -1,6 +1,6 @@
 package com.vanyne.reservation.interfaces.impl;
 
-import com.vanyne.reservation.application.impl.UserInfoService;
+import com.vanyne.reservation.application.UserInfoService;
 import com.vayne.model.api.UserInfoApi;
 import com.vayne.model.model.*;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -38,11 +38,17 @@ public class MeetRoomInfoEntity {
     @TableField(value = "room_name")
     private String roomName;
 
+    public static final String COL_STATUS = "status";
     /**
      * 容量
      */
     @TableField(value = "capacity")
-    private Byte capacity;
+    private Integer capacity;
+    /**
+     * 会议室状态：1正常，0禁用
+     */
+    @TableField(value = "status")
+    private Integer status;
 
     /**
      * 创建时间
@@ -63,6 +69,11 @@ public class MeetRoomInfoEntity {
     public static final String COL_ROOM_NAME = "room_name";
 
     public static final String COL_CAPACITY = "capacity";
+    /**
+     * 会议室状态：1正常，0禁用
+     */
+    @TableField(value = "update_user")
+    private String updateUser;
 
     public static final String COL_CREATE_TIME = "create_time";
 
