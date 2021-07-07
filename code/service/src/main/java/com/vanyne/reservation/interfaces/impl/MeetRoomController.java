@@ -35,8 +35,10 @@ public class MeetRoomController implements MeetRoomApi {
      */
     @GetMapping("/list")
     @Override
-    public ListMeetRoomRep listMeetRoom(@RequestParam("roomName") String roomName, @RequestParam("minCapacity") Integer minCapacity,
-                                        @RequestParam("maxCapacity") Integer maxCapacity, @RequestParam("pageNum") @NotNull Integer pageNum,
+    public ListMeetRoomRep listMeetRoom(@RequestParam(value = "roomName", required = false) String roomName,
+                                        @RequestParam(value = "minCapacity", required = false) Integer minCapacity,
+                                        @RequestParam(value = "maxCapacity", required = false) Integer maxCapacity,
+                                        @RequestParam("pageNum") @NotNull Integer pageNum,
                                         @RequestParam("pageSize") @NotNull Integer pageSize) {
         return meetRoomInfoService.listMeetRoom(roomName, minCapacity, maxCapacity, pageNum, pageSize);
     }

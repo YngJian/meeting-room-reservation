@@ -1,6 +1,7 @@
 package com.vanyne.reservation.interfaces.impl;
 
 import com.vanyne.reservation.application.UserInfoService;
+import com.vanyne.reservation.domain.annotations.UnLoginLimit;
 import com.vayne.model.api.UserInfoApi;
 import com.vayne.model.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,7 @@ public class UserInfoController implements UserInfoApi {
      * @param registerReq r
      * @return r
      */
+    @UnLoginLimit
     @PostMapping("/register")
     @Override
     public RegisterRep register(@RequestBody @Valid RegisterReq registerReq) {
@@ -37,6 +39,7 @@ public class UserInfoController implements UserInfoApi {
      * @param userName userName
      * @return r
      */
+    @UnLoginLimit
     @GetMapping("/name/{userName}")
     @Override
     public RepeatRep userNameRepeated(@PathVariable @NotNull String userName) {
@@ -49,6 +52,7 @@ public class UserInfoController implements UserInfoApi {
      * @param phone phone
      * @return r
      */
+    @UnLoginLimit
     @GetMapping("/phone/{phone}")
     @Override
     public RepeatRep phoneRepeated(@PathVariable @NotNull String phone) {
@@ -61,6 +65,7 @@ public class UserInfoController implements UserInfoApi {
      * @param email email
      * @return r
      */
+    @UnLoginLimit
     @GetMapping("/email/{email}")
     @Override
     public RepeatRep emailRepeated(@PathVariable @NotNull String email) {
@@ -73,6 +78,7 @@ public class UserInfoController implements UserInfoApi {
      * @param loginReq r
      * @return r
      */
+    @UnLoginLimit
     @PostMapping("/login")
     @Override
     public LoginRep login(@RequestBody @Valid @NotNull LoginReq loginReq) {

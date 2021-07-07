@@ -27,7 +27,7 @@ public class MeetRoomInfo {
     /**
      * 容量
      */
-    private Byte capacity;
+    private Integer capacity;
 
     /**
      * 会议室状态：1正常，0禁用
@@ -35,9 +35,9 @@ public class MeetRoomInfo {
     private Integer status;
 
     /**
-     * 会议室状态：1正常，0禁用
+     * 修改人
      */
-    private Integer updateUser;
+    private String updateUser;
 
     /**
      * 创建时间

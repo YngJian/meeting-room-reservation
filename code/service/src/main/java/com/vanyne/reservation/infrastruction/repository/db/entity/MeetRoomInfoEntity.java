@@ -20,6 +20,22 @@ import java.util.Date;
 @NoArgsConstructor
 @TableName(value = "t_meet_room_info")
 public class MeetRoomInfoEntity {
+    public static final String COL_ID = "id";
+
+    public static final String COL_ROOM_ID = "room_id";
+
+    public static final String COL_ROOM_NAME = "room_name";
+
+    public static final String COL_CAPACITY = "capacity";
+
+    public static final String COL_STATUS = "status";
+
+    public static final String COL_UPDATE_USER = "update_user";
+
+    public static final String COL_CREATE_TIME = "create_time";
+
+    public static final String COL_UPDATE_TIME = "update_time";
+
     /**
      * 主键
      */
@@ -38,7 +54,6 @@ public class MeetRoomInfoEntity {
     @TableField(value = "room_name")
     private String roomName;
 
-    public static final String COL_STATUS = "status";
     /**
      * 容量
      */
@@ -51,6 +66,12 @@ public class MeetRoomInfoEntity {
     private Integer status;
 
     /**
+     * 修改人
+     */
+    @TableField(value = "update_user")
+    private String updateUser;
+
+    /**
      * 创建时间
      */
     @TableField(value = "create_time")
@@ -61,21 +82,4 @@ public class MeetRoomInfoEntity {
      */
     @TableField(value = "update_time")
     private Date updateTime;
-
-    public static final String COL_ID = "id";
-
-    public static final String COL_ROOM_ID = "room_id";
-
-    public static final String COL_ROOM_NAME = "room_name";
-
-    public static final String COL_CAPACITY = "capacity";
-    /**
-     * 会议室状态：1正常，0禁用
-     */
-    @TableField(value = "update_user")
-    private String updateUser;
-
-    public static final String COL_CREATE_TIME = "create_time";
-
-    public static final String COL_UPDATE_TIME = "update_time";
 }

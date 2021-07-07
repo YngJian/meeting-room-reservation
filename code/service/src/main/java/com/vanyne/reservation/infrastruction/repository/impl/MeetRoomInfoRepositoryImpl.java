@@ -28,7 +28,7 @@ public class MeetRoomInfoRepositoryImpl implements MeetRoomInfoRepository {
      */
     @Override
     public IPage<MeetRoomInfoEntity> selectList(Integer pageNum, Integer pageSize, QueryWrapper<MeetRoomInfoEntity> queryWrapper) {
-        Page<MeetRoomInfoEntity> page = new Page<>(pageNum, pageSize);
+        Page<MeetRoomInfoEntity> page = new Page<>(pageNum, pageSize, true);
         return meetRoomInfoMapper.selectPage(page, queryWrapper);
     }
 }

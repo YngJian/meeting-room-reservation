@@ -1,6 +1,5 @@
 package com.vanyne.reservation.application.impl;
 
-import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -16,6 +15,7 @@ import com.vanyne.reservation.infrastruction.util.CommonUtils;
 import com.vayne.model.common.Result;
 import com.vayne.model.model.*;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
@@ -47,9 +47,9 @@ public class MeetRoomInfoServiceImpl extends ServiceImpl<MeetRoomInfoMapper, Mee
     @Override
     public ListMeetRoomRep listMeetRoom(String roomName, Integer minCapacity, Integer maxCapacity, Integer pageNum, Integer pageSize) {
         QueryWrapper<MeetRoomInfoEntity> queryWrapper = new QueryWrapper<>();
-        queryWrapper.likeLeft(MeetRoomInfoEntity.COL_ROOM_NAME, roomName)
-                .le(MeetRoomInfoEntity.COL_CAPACITY, maxCapacity)
-                .ge(MeetRoomInfoEntity.COL_CAPACITY, minCapacity);
+        queryWrapper.likeRight(!StringUtils.isEmpty(roomName), MeetRoomInfoEntity.COL_ROOM_NAME, roomName)
+                .le(maxCapacity != null, MeetRoomInfoEntity.COL_CAPACITY, maxCapacity)
+                .ge(minCapacity != null, MeetRoomInfoEntity.COL_CAPACITY, minCapacity);
         IPage<MeetRoomInfoEntity> meetRoomInfoEntityIPage = meetRoomInfoRepository.selectList(pageNum, pageSize, queryWrapper);
 
         List<MeetRoomInfoEntity> records = meetRoomInfoEntityIPage.getRecords();
@@ -57,7 +57,7 @@ public class MeetRoomInfoServiceImpl extends ServiceImpl<MeetRoomInfoMapper, Mee
 
         records.forEach(meetRoomInfoEntity -> {
             MeetRoomInfo meetRoomInfo = new MeetRoomInfo();
-            BeanUtil.copyProperties(meetRoomInfoEntity, meetRoomInfo);
+            BeanUtils.copyProperties(meetRoomInfoEntity, meetRoomInfo);
             meetRoomInfo.setCreateTime(parseLongTime(meetRoomInfoEntity.getCreateTime()));
             meetRoomInfo.setUpdateTime(parseLongTime(meetRoomInfoEntity.getUpdateTime()));
             meetRoomInfos.add(meetRoomInfo);

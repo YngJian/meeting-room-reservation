@@ -20,6 +20,24 @@ import java.util.Date;
 @NoArgsConstructor
 @TableName(value = "t_user_info")
 public class UserInfoEntity {
+    public static final String COL_ID = "id";
+
+    public static final String COL_USER_ID = "user_id";
+
+    public static final String COL_USER_NAME = "user_name";
+
+    public static final String COL_PASSWORD = "password";
+
+    public static final String COL_PHONE = "phone";
+
+    public static final String COL_EMAIL = "email";
+
+    public static final String COL_STATUS = "status";
+
+    public static final String COL_CREATE_TIME = "create_time";
+
+    public static final String COL_UPDATE_TIME = "update_time";
+
     /**
      * 主键
      */
@@ -56,7 +74,11 @@ public class UserInfoEntity {
     @TableField(value = "email")
     private String email;
 
-    public static final String COL_STATUS = "status";
+    /**
+     * 用户状态：1正常，0被锁，-1弃用
+     */
+    @TableField(value = "status")
+    private Integer status;
 
     /**
      * 创建时间
@@ -69,25 +91,4 @@ public class UserInfoEntity {
      */
     @TableField(value = "update_time")
     private Date updateTime;
-
-    public static final String COL_ID = "id";
-
-    public static final String COL_USER_ID = "user_id";
-
-    public static final String COL_USER_NAME = "user_name";
-
-    public static final String COL_PASSWORD = "password";
-
-    public static final String COL_PHONE = "phone";
-
-    public static final String COL_EMAIL = "email";
-    /**
-     * 用户状态：1正常，0被锁，-1弃用
-     */
-    @TableField(value = "status")
-    private Integer status;
-
-    public static final String COL_CREATE_TIME = "create_time";
-
-    public static final String COL_UPDATE_TIME = "update_time";
 }

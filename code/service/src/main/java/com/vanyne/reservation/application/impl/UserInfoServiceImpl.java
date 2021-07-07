@@ -1,6 +1,5 @@
 package com.vanyne.reservation.application.impl;
 
-import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -17,6 +16,7 @@ import com.vanyne.reservation.infrastruction.util.JwtUtils;
 import com.vayne.model.common.Result;
 import com.vayne.model.model.*;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
@@ -87,7 +87,7 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfoEnt
 
     private UserInfoEntity getUserInfo(RegisterReq registerReq) {
         UserInfoEntity userInfoEntity = new UserInfoEntity();
-        BeanUtil.copyProperties(registerReq, userInfoEntity);
+        BeanUtils.copyProperties(registerReq, userInfoEntity);
         userInfoEntity.setUserId(CommonUtils.getUUID());
         return userInfoEntity;
     }
@@ -197,7 +197,7 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfoEnt
 
     private LoginRep pwdRightRep(UserInfoEntity userInfoEntity) {
         UserInfo userInfo = new UserInfo();
-        BeanUtil.copyProperties(userInfoEntity, userInfo);
+        BeanUtils.copyProperties(userInfoEntity, userInfo);
 
         // 生成token
         String token = JwtUtils.generateToken(userInfoEntity.getUserId());
