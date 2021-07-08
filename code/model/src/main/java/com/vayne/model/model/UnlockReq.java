@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -19,7 +18,6 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 public class UnlockReq {
     @NotNull
-    @NotEmpty
     @Size(min = 1, max = 256)
     private String userName;
 }
