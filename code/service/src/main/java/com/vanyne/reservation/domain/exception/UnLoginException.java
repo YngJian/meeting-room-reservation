@@ -1,4 +1,4 @@
-package com.vanyne.reservation.domain;
+package com.vanyne.reservation.domain.exception;
 
 /**
  * @author : Yang Jian

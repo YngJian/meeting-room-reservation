@@ -1,7 +1,7 @@
 package com.vanyne.reservation.domain.interceptor;
 
-import com.vanyne.reservation.domain.UnLoginException;
 import com.vanyne.reservation.domain.annotations.UnLoginLimit;
+import com.vanyne.reservation.domain.exception.UnLoginException;
 import com.vanyne.reservation.infrastruction.common.ConstantType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;

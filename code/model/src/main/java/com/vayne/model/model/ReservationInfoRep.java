@@ -6,20 +6,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
-import java.util.List;
-
 /**
  * @author : Yang Jian
- * @date : 2021/7/6 0006 21:46
+ * @date : 2021/7/12 0006 22:07
  */
 @Data
 @Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
-public class ListMeetRoomRep {
+public class ReservationInfoRep {
     private Result result;
-
-    private Integer total;
-
-    private List<MeetRoomInfo> meetRoomInfo;
 }

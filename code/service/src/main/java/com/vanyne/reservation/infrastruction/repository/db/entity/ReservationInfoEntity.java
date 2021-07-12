@@ -20,6 +20,20 @@ import java.util.Date;
 @NoArgsConstructor
 @TableName(value = "t_reservation_info")
 public class ReservationInfoEntity {
+    public static final String COL_ID = "id";
+
+    public static final String COL_ROOM_ID = "room_id";
+
+    public static final String COL_USER_ID = "user_id";
+
+    public static final String COL_START_TIME = "start_time";
+
+    public static final String COL_END_TIME = "end_time";
+
+    public static final String COL_CREATE_TIME = "create_time";
+
+    public static final String COL_UPDATE_TIME = "update_time";
+
     /**
      * 主键
      */
@@ -61,18 +75,4 @@ public class ReservationInfoEntity {
      */
     @TableField(value = "update_time")
     private Date updateTime;
-
-    public static final String COL_ID = "id";
-
-    public static final String COL_ROOM_ID = "room_id";
-
-    public static final String COL_USER_ID = "user_id";
-
-    public static final String COL_START_TIME = "start_time";
-
-    public static final String COL_END_TIME = "end_time";
-
-    public static final String COL_CREATE_TIME = "create_time";
-
-    public static final String COL_UPDATE_TIME = "update_time";
 }

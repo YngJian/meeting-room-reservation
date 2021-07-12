@@ -16,10 +16,10 @@ import java.util.List;
 @Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
-public class ListMeetRoomRep {
+public class ListReservationInfoRep {
     private Result result;
 
     private Integer total;
 
-    private List<MeetRoomInfo> meetRoomInfo;
+    private List<ReservationInfo> reservationInfoList;
 }
