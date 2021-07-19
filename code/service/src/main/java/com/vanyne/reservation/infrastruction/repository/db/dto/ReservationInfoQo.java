@@ -1,4 +1,4 @@
-package com.vanyne.reservation.infrastruction.repository.db;
+package com.vanyne.reservation.infrastruction.repository.db.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,9 +15,9 @@ import java.util.Date;
 @Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
-public class ReservationInfoDto {
+public class ReservationInfoQo {
     /**
-     * 房间id
+     * 房间名
      */
     private String roomName;
 

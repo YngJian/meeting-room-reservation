@@ -22,11 +22,10 @@ public interface ReservationInfoApi {
      * @param endTime   结束时间
      * @param pageNum   页码
      * @param pageSize  条数
-     * @param token     token
      * @return list
      */
     ListReservationInfoRep listReservationInfo(String roomName, String userName, String startTime, String endTime,
-                                               @NotNull Integer pageNum, @NotNull Integer pageSize, String token);
+                                               @NotNull Integer pageNum, @NotNull Integer pageSize);
 
     /**
      * 新增会议室

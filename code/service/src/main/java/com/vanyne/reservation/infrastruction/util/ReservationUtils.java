@@ -3,9 +3,11 @@ package com.vanyne.reservation.infrastruction.util;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
-import com.vanyne.reservation.infrastruction.repository.db.ReservationInfoDto;
+import com.vanyne.reservation.infrastruction.repository.db.dto.ReservationInfoQo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
+
+import java.util.Date;
 
 /**
  * @author : Yang Jian
@@ -16,15 +18,25 @@ public class ReservationUtils {
     private ReservationUtils() {
     }
 
-    public static boolean isFormat(String startTime, ReservationInfoDto reservationInfoDto, String msg) {
+    public static boolean isFormat(String startTime, ReservationInfoQo reservationInfoQo, String msg) {
         if (!StringUtils.isEmpty(startTime)) {
             try {
                 DateTime dateTime = DateUtil.parse(startTime, DatePattern.NORM_DATETIME_PATTERN);
-                reservationInfoDto.setStartTime(dateTime);
+                reservationInfoQo.setStartTime(dateTime);
             } catch (Exception e) {
                 log.error(msg, e);
                 return true;
             }
+        }
+        return false;
+    }
+
+    public static boolean compareTime(Date startTime, Date endTime) {
+        if (StringUtils.isEmpty(startTime) || StringUtils.isEmpty(endTime)) {
+            return false;
+        }
+        if (!StringUtils.isEmpty(startTime) && !StringUtils.isEmpty(endTime)) {
+            return startTime.after(endTime);
         }
         return false;
     }

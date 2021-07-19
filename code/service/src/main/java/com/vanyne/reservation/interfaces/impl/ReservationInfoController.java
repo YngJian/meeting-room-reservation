@@ -2,9 +2,10 @@ package com.vanyne.reservation.interfaces.impl;
 
 import com.vanyne.reservation.application.ReservationInfoService;
 import com.vanyne.reservation.domain.enums.CommonResult;
-import com.vanyne.reservation.infrastruction.repository.db.ReservationInfoDto;
+import com.vanyne.reservation.infrastruction.repository.db.dto.ReservationInfoQo;
 import com.vanyne.reservation.infrastruction.util.ReservationUtils;
 import com.vayne.model.api.ReservationInfoApi;
+import com.vayne.model.common.Result;
 import com.vayne.model.model.CreateReservationInfoReq;
 import com.vayne.model.model.ListReservationInfoRep;
 import com.vayne.model.model.ReservationInfoRep;
@@ -36,7 +37,6 @@ public class ReservationInfoController implements ReservationInfoApi {
      * @param endTime   结束时间
      * @param pageNum   页码
      * @param pageSize  条数
-     * @param token     token
      * @return list
      */
     @GetMapping("/list")
@@ -45,18 +45,28 @@ public class ReservationInfoController implements ReservationInfoApi {
                                                       @RequestParam(required = false) String userName,
                                                       @RequestParam(required = false) String startTime,
                                                       @RequestParam(required = false) String endTime,
-                                                      @NotNull Integer pageNum, @NotNull Integer pageSize,
-                                                      @RequestHeader("token") String token) {
-        ReservationInfoDto reservationInfoDto = new ReservationInfoDto();
-        if (ReservationUtils.isFormat(startTime, reservationInfoDto, "The start time format is incorrect.")) {
-            return new ListReservationInfoRep().setResult(CommonResult.INVALID_PARAM.toResult());
+                                                      @NotNull @RequestParam Integer pageNum,
+                                                      @NotNull @RequestParam Integer pageSize) {
+        ReservationInfoQo reservationInfoQo = new ReservationInfoQo();
+
+        String msg = "The start time format is incorrect.";
+        if (ReservationUtils.isFormat(startTime, reservationInfoQo, msg)) {
+            return new ListReservationInfoRep().setResult(new Result(CommonResult.INVALID_PARAM.getCode(), msg));
         }
-        if (ReservationUtils.isFormat(endTime, reservationInfoDto, "The endTime time format is incorrect.")) {
-            return new ListReservationInfoRep().setResult(CommonResult.INVALID_PARAM.toResult());
+
+        String endMsg = "The endTime time format is incorrect.";
+        if (ReservationUtils.isFormat(endTime, reservationInfoQo, endMsg)) {
+            return new ListReservationInfoRep().setResult(new Result(CommonResult.INVALID_PARAM.getCode(), endMsg));
         }
-        reservationInfoDto.setUserName(userName)
+
+        String lessMsg = "The start time should be less than the end time.";
+        if (ReservationUtils.compareTime(reservationInfoQo.getStartTime(), reservationInfoQo.getEndTime())) {
+            return new ListReservationInfoRep().setResult(new Result(CommonResult.INVALID_PARAM.getCode(), lessMsg));
+        }
+
+        reservationInfoQo.setUserName(userName)
                 .setRoomName(roomName);
-        return reservationInfoService.listReservationInfo(token, reservationInfoDto, pageNum, pageSize);
+        return reservationInfoService.listReservationInfo(reservationInfoQo, pageNum, pageSize);
     }
 
     /**

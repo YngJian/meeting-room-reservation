@@ -15,6 +15,31 @@
     </resultMap>
     <sql id="Base_Column_List">
         <!--@mbg.generated-->
-        id, room_id, user_id, start_time, end_time, create_time, update_time
+        r.id, r.room_id, r.user_id, r.start_time, r.end_time, r.create_time, r.update_time
     </sql>
+    <select id="getReservationsByPage"
+            resultType="com.vanyne.reservation.infrastruction.repository.db.dto.ReservationInfoDto">
+        select
+        <include refid="Base_Column_List"/>
+        ,u.user_name, m.room_name
+        from t_reservation_info r
+        left join t_meet_room_info m on r.room_id = m.room_id
+        left join t_user_info u on r.user_id = u.user_id
+        <if test="reservationInfoQo != null">
+            <where>
+                <if test="reservationInfoQo.roomName != null and reservationInfoQo.roomName !='' ">
+                    m.room_name LIKE CONCAT(#{reservationInfoQo.roomName,jdbcType=VARCHAR}, '%')
+                </if>
+                <if test="reservationInfoQo.userName != null and reservationInfoQo.userName !='' ">
+                    and u.user_name = #{reservationInfoQo.userName,jdbcType=VARCHAR}
+                </if>
+                <if test="reservationInfoQo.startTime != null">
+                    <![CDATA[ and r.start_time >= #{reservationInfoQo.startTime,jdbcType=TIMESTAMP} ]]>
+                </if>
+                <if test="reservationInfoQo.endTime != null and reservationInfoQo.endTime !='' ">
+                    <![CDATA[ and r.start_time <= #{reservationInfoQo.endTime,jdbcType=TIMESTAMP} ]]>
+                </if>
+            </where>
+        </if>
+    </select>
 </mapper>

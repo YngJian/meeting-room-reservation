@@ -19,7 +19,7 @@ import java.util.List;
 public class ListReservationInfoRep {
     private Result result;
 
-    private Integer total;
+    private Long total;
 
     private List<ReservationInfo> reservationInfoList;
 }
