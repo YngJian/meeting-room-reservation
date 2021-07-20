@@ -31,4 +31,17 @@ public class MeetRoomInfoRepositoryImpl implements MeetRoomInfoRepository {
         Page<MeetRoomInfoEntity> page = new Page<>(pageNum, pageSize, true);
         return meetRoomInfoMapper.selectPage(page, queryWrapper);
     }
+
+    /**
+     * 根据roomId查询
+     *
+     * @param roomId userId
+     * @return int
+     */
+    @Override
+    public int selectCountByRoomId(String roomId) {
+        QueryWrapper<MeetRoomInfoEntity> userInfoWrapper = new QueryWrapper<>();
+        userInfoWrapper.eq(MeetRoomInfoEntity.COL_ROOM_ID, roomId);
+        return meetRoomInfoMapper.selectCount(userInfoWrapper);
+    }
 }

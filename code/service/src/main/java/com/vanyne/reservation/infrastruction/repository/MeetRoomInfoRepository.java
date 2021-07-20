@@ -18,4 +18,12 @@ public interface MeetRoomInfoRepository {
      * @return int
      */
     IPage<MeetRoomInfoEntity> selectList(Integer pageNum, Integer pageSize, QueryWrapper<MeetRoomInfoEntity> queryWrapper);
+
+    /**
+     * 根据roomId查询
+     *
+     * @param roomId userId
+     * @return int
+     */
+    int selectCountByRoomId(String roomId);
 }

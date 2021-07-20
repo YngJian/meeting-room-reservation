@@ -77,4 +77,17 @@ public class UserInfoRepositoryImpl implements UserInfoRepository {
         userInfoWrapper.eq(UserInfoEntity.COL_USER_ID, userId);
         return userInfoMapper.update(userInfoEntity, userInfoWrapper);
     }
+
+    /**
+     * 根据userId查询
+     *
+     * @param userId userId
+     * @return int
+     */
+    @Override
+    public int selectCountByUserId(String userId) {
+        QueryWrapper<UserInfoEntity> userInfoWrapper = new QueryWrapper<>();
+        userInfoWrapper.eq(UserInfoEntity.COL_USER_ID, userId);
+        return userInfoMapper.selectCount(userInfoWrapper);
+    }
 }

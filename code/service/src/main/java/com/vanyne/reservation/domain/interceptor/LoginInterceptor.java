@@ -3,6 +3,8 @@ package com.vanyne.reservation.domain.interceptor;
 import com.vanyne.reservation.domain.annotations.UnLoginLimit;
 import com.vanyne.reservation.domain.exception.UnLoginException;
 import com.vanyne.reservation.infrastruction.common.ConstantType;
+import com.vanyne.reservation.infrastruction.util.JwtUtils;
+import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
@@ -36,6 +38,12 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
                 if (StringUtils.isEmpty(token)) {
                     throw new UnLoginException("token is null.");
                 }
+
+                Claims claimsByToken = JwtUtils.getClaimsByToken(token);
+                if (claimsByToken == null) {
+                    throw new UnLoginException("validate is token error.");
+                }
+
                 String user = stringRedisTemplate.opsForValue().get(ConstantType.TOKEN_KEY + token);
                 if (StringUtils.isEmpty(user)) {
                     throw new UnLoginException("The token has expired. please login again.");

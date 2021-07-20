@@ -56,4 +56,12 @@ public interface UserInfoRepository {
      * @return int
      */
     Integer updateByUserId(String userId, UserInfoEntity userInfoEntity);
+
+    /**
+     * 根据userId查询
+     *
+     * @param userId userId
+     * @return int
+     */
+    int selectCountByUserId(String userId);
 }

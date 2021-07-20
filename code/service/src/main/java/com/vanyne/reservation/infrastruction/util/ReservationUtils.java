@@ -7,8 +7,6 @@ import com.vanyne.reservation.infrastruction.repository.db.dto.ReservationInfoQo
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 
-import java.util.Date;
-
 /**
  * @author : Yang Jian
  * @date : 2021/7/12 0012 22:40
@@ -27,16 +25,6 @@ public class ReservationUtils {
                 log.error(msg, e);
                 return true;
             }
-        }
-        return false;
-    }
-
-    public static boolean compareTime(Date startTime, Date endTime) {
-        if (StringUtils.isEmpty(startTime) || StringUtils.isEmpty(endTime)) {
-            return false;
-        }
-        if (!StringUtils.isEmpty(startTime) && !StringUtils.isEmpty(endTime)) {
-            return startTime.after(endTime);
         }
         return false;
     }

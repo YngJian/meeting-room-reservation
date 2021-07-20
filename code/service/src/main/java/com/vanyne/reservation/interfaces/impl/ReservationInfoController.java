@@ -3,6 +3,7 @@ package com.vanyne.reservation.interfaces.impl;
 import com.vanyne.reservation.application.ReservationInfoService;
 import com.vanyne.reservation.domain.enums.CommonResult;
 import com.vanyne.reservation.infrastruction.repository.db.dto.ReservationInfoQo;
+import com.vanyne.reservation.infrastruction.util.DateUtils;
 import com.vanyne.reservation.infrastruction.util.ReservationUtils;
 import com.vayne.model.api.ReservationInfoApi;
 import com.vayne.model.common.Result;
@@ -60,7 +61,7 @@ public class ReservationInfoController implements ReservationInfoApi {
         }
 
         String lessMsg = "The start time should be less than the end time.";
-        if (ReservationUtils.compareTime(reservationInfoQo.getStartTime(), reservationInfoQo.getEndTime())) {
+        if (DateUtils.compareTime(reservationInfoQo.getStartTime(), reservationInfoQo.getEndTime())) {
             return new ListReservationInfoRep().setResult(new Result(CommonResult.INVALID_PARAM.getCode(), lessMsg));
         }
 
@@ -79,7 +80,7 @@ public class ReservationInfoController implements ReservationInfoApi {
     @Override
     public ReservationInfoRep createReservationInfo(@RequestBody @Valid CreateReservationInfoReq createReservationInfoReq,
                                                     @RequestHeader("token") String token) {
-        return null;
+        return reservationInfoService.createReservationInfo(createReservationInfoReq, token);
     }
 
     /**

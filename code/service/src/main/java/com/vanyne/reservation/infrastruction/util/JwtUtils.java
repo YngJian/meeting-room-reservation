@@ -3,6 +3,7 @@ package com.vanyne.reservation.infrastruction.util;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Date;
 
@@ -10,6 +11,7 @@ import java.util.Date;
  * @author : Yang Jian
  * @date : 2021/7/4 0004 10:01
  */
+@Slf4j
 public class JwtUtils {
     private static final long expire = 604800;
     // 秘钥
@@ -42,7 +44,7 @@ public class JwtUtils {
                     .setSigningKey(secret)
                     .parseClaimsJws(token).getBody();
         } catch (Exception e) {
-            System.out.println("validate is token error");
+            log.error("validate is token error", e);
             return null;
         }
     }

@@ -15,6 +15,8 @@ public class ConstantType {
 
     public static final String AUTO_UNLOCK_REDIS_KEY = "reservation:auto:unlock:";
 
+    public static final String RESERVATION_INFO_CREATE = "reservation:info:create";
+
     public static final String TOKEN_KEY = "token:";
 
     public static final long TOKEN_EXPIRE_MINUTES = 30;
@@ -22,4 +24,6 @@ public class ConstantType {
     public static final long PWD_WRONG_EXPIRE_HOURS = 24;
 
     public static final long AUTO_UNLOCK_REDIS_EXPIRE_HOURS = 24;
+
+    public static final long MILLI_NANO_TIME = 60;
 }
