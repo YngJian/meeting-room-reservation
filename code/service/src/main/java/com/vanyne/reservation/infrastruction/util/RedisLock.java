@@ -7,6 +7,8 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Component;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -42,11 +44,11 @@ public class RedisLock {
      * @return 成功 or 失败
      */
     public boolean lock(String key, String value, long timeout, int expire) {
-        long nanoTime = System.nanoTime();
-        timeout *= ConstantType.MILLI_NANO_TIME;
+        LocalDateTime now = LocalDateTime.now();
+        timeout *= ConstantType.SECOND_TIME;
         try {
             // 在timeout的时间范围内不断轮询锁
-            while (System.nanoTime() - nanoTime < timeout) {
+            while (Duration.between(now, LocalDateTime.now()).getSeconds() < timeout) {
                 if (stringRedisTemplate.opsForValue().setIfAbsent(key, value, expire, TimeUnit.MINUTES)) {
                     return true;
                 }

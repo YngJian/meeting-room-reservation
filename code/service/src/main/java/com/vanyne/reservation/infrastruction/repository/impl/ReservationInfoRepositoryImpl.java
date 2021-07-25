@@ -1,5 +1,6 @@
 package com.vanyne.reservation.infrastruction.repository.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.vanyne.reservation.infrastruction.repository.ReservationInfoRepository;
 import com.vanyne.reservation.infrastruction.repository.db.dto.ReservationInfoDto;
@@ -28,5 +29,22 @@ public class ReservationInfoRepositoryImpl implements ReservationInfoRepository 
     @Override
     public Page<ReservationInfoDto> getReservationsByPage(Page<ReservationInfoEntity> page, ReservationInfoQo reservationInfoQo) {
         return reservationInfoMapper.getReservationsByPage(page, reservationInfoQo);
+    }
+
+    /**
+     * 是否有被预约
+     *
+     * @param startTime 开始时间
+     * @param endTime   结束时间
+     * @param roomId    user id
+     * @return int
+     */
+    @Override
+    public int IsAppointment(String startTime, String endTime, String roomId) {
+        QueryWrapper<ReservationInfoEntity> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq(ReservationInfoEntity.COL_ROOM_ID, roomId);
+        queryWrapper.gt(ReservationInfoEntity.COL_END_TIME, startTime);
+        queryWrapper.lt(ReservationInfoEntity.COL_START_TIME, endTime);
+        return reservationInfoMapper.selectCount(queryWrapper);
     }
 }

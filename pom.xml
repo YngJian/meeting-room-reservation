@@ -43,6 +43,12 @@
                 <artifactId>client</artifactId>
                 <version>${project.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>com.vayne</groupId>
+                <artifactId>annotation-vayne</artifactId>
+                <version>${project.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

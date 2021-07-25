@@ -1,7 +1,7 @@
 package com.vanyne.reservation.interfaces.impl;
 
 import com.vanyne.reservation.application.UserInfoService;
-import com.vanyne.reservation.domain.annotations.UnLoginLimit;
+import com.vayne.annotations.login.UnLoginLimit;
 import com.vayne.model.api.UserInfoApi;
 import com.vayne.model.model.*;
 import org.springframework.beans.factory.annotation.Autowired;

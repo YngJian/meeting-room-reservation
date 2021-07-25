@@ -1,9 +1,9 @@
 package com.vanyne.reservation.domain.interceptor;
 
-import com.vanyne.reservation.domain.annotations.UnLoginLimit;
 import com.vanyne.reservation.domain.exception.UnLoginException;
 import com.vanyne.reservation.infrastruction.common.ConstantType;
 import com.vanyne.reservation.infrastruction.util.JwtUtils;
+import com.vayne.annotations.login.UnLoginLimit;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;

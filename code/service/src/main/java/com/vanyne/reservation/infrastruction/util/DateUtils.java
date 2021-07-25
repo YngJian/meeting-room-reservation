@@ -5,7 +5,12 @@ import cn.hutool.core.date.DateUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Date;
+import java.util.Optional;
 
 /**
  * @author : Yang Jian
@@ -43,15 +48,40 @@ public class DateUtils {
      * @param date date
      * @return true 正确，false 不正确
      */
-    public static boolean isCorrectFormat(String date) {
+    public static Optional<Date> parse(String date) {
         if (!StringUtils.isEmpty(date)) {
             try {
-                DateUtil.parse(date, DatePattern.NORM_DATETIME_PATTERN);
+                return Optional.of(DateUtil.parse(date, DatePattern.NORM_DATETIME_PATTERN));
             } catch (Exception e) {
                 log.error(e.getMessage(), e);
-                return false;
+                return Optional.empty();
             }
         }
-        return true;
+        return Optional.empty();
+    }
+
+    /**
+     * local Date time To Date
+     *
+     * @param localDateTime localDateTime
+     * @return date
+     */
+    public static Date localDateTimeToDate(LocalDateTime localDateTime) {
+        ZoneId zoneId = ZoneId.systemDefault();
+        ZonedDateTime zdt = localDateTime.atZone(zoneId);
+        return Date.from(zdt.toInstant());
+    }
+
+    /**
+     * Date To Local Date time
+     *
+     * @param date date
+     * @return LocalDate
+     */
+    public static LocalDateTime dateToLocalDateTime(Date date) {
+        Instant instant = date.toInstant();
+        //系统默认的时区
+        ZoneId zoneId = ZoneId.systemDefault();
+        return LocalDateTime.ofInstant(instant, zoneId);
     }
 }

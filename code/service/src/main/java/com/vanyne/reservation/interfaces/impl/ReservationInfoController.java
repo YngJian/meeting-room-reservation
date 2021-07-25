@@ -77,6 +77,7 @@ public class ReservationInfoController implements ReservationInfoApi {
      * @param token                    token
      * @return createReservationInfoRep
      */
+    @PostMapping("/add")
     @Override
     public ReservationInfoRep createReservationInfo(@RequestBody @Valid CreateReservationInfoReq createReservationInfoReq,
                                                     @RequestHeader("token") String token) {

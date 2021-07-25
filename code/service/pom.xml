@@ -35,6 +35,10 @@
             <artifactId>client</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.vayne</groupId>
+            <artifactId>annotation-vayne</artifactId>
+        </dependency>
         <!--fastjson-->
         <dependency>
             <groupId>com.alibaba</groupId>

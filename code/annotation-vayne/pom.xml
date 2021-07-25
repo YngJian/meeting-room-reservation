@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.vayne</groupId>
+        <artifactId>reservation</artifactId>
+        <version>${project.version}</version>
+        <relativePath>../../pom.xml</relativePath>  <!-- lookup parent from repository -->
+    </parent>
+
+    <artifactId>annotation-vayne</artifactId>
+    <version>${project.version}</version>
+    <name>annotation-vayne</name>
+    <description>Demo project for annotation-vayne</description>
+    <packaging>jar</packaging>
+
+    <properties>
+        <java.version>1.8</java.version>
+    </properties>
+
+    <dependencies>
+
+    </dependencies>
+
+</project>

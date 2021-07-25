@@ -1,10 +1,12 @@
 package com.vanyne.reservation.infrastruction.util;
 
+import com.vanyne.reservation.infrastruction.common.ConstantType;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -13,10 +15,6 @@ import java.util.Date;
  */
 @Slf4j
 public class JwtUtils {
-    private static final long expire = 604800;
-    // 秘钥
-    private static final String secret = "VAYNeeXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9";
-
     /**
      * 创建一个token
      *
@@ -24,14 +22,15 @@ public class JwtUtils {
      * @return s
      */
     public static String generateToken(String userId) {
-        Date now = new Date();
-        Date expireDate = new Date(now.getTime() + expire);
+        Date date = new Date();
+        LocalDateTime localDateTime = DateUtils.dateToLocalDateTime(date).plusMinutes(ConstantType.TOKEN_EXPIRE_MINUTES);
+        Date expirationDate = DateUtils.localDateTimeToDate(localDateTime);
         return Jwts.builder()
                 .setHeaderParam("type", "JWT")
                 .setSubject(userId)
-                .setIssuedAt(now)
-                .setExpiration(expireDate)
-                .signWith(SignatureAlgorithm.HS512, secret)
+                .setIssuedAt(date)
+                .setExpiration(expirationDate)
+                .signWith(SignatureAlgorithm.HS512, ConstantType.JWT_SECRET)
                 .compact();
     }
 
@@ -41,7 +40,7 @@ public class JwtUtils {
     public static Claims getClaimsByToken(String token) {
         try {
             return Jwts.parser()
-                    .setSigningKey(secret)
+                    .setSigningKey(ConstantType.JWT_SECRET)
                     .parseClaimsJws(token).getBody();
         } catch (Exception e) {
             log.error("validate is token error", e);

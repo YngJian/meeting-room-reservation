@@ -25,8 +25,13 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -101,7 +106,9 @@ public class ReservationInfoServiceImpl extends ServiceImpl<ReservationInfoMappe
         String startTime = createReservationInfoReq.getStartTime();
         String endTime = createReservationInfoReq.getEndTime();
 
-        if (!DateUtils.isCorrectFormat(startTime) || !DateUtils.isCorrectFormat(endTime)) {
+        Optional<Date> startDate = DateUtils.parse(startTime);
+        Optional<Date> endDate = DateUtils.parse(endTime);
+        if (!startDate.isPresent() || !endDate.isPresent()) {
             log.info("The time format is incorrect.startTime:[{}],endTime:[{}]", startTime, endTime);
             return new ReservationInfoRep()
                     .setResult(
@@ -110,7 +117,13 @@ public class ReservationInfoServiceImpl extends ServiceImpl<ReservationInfoMappe
                     );
         }
 
-        int countByUserId = userInfoRepository.selectCountByUserId(userInfo.getUserId());
+        ReservationInfoRep reservationInfoRep = this.isCorrectTime(startDate.get(), endDate.get(), startTime, endTime);
+        if (reservationInfoRep != null) {
+            return reservationInfoRep;
+        }
+
+        String userId = userInfo.getUserId();
+        int countByUserId = userInfoRepository.selectCountByUserId(userId);
         if (countByUserId == 0) {
             log.info("The user id does not exist.token: [{}]", token);
             return new ReservationInfoRep()
@@ -130,11 +143,95 @@ public class ReservationInfoServiceImpl extends ServiceImpl<ReservationInfoMappe
                     );
         }
 
-        String value = CommonUtils.getUUID();
-        boolean lock = redisLock.lock(ConstantType.RESERVATION_INFO_CREATE, value, 1, 60);
-        if (lock) {
-            // 判断时间是否有被预约
+        // 判断时间是否有被预约
+        int count = reservationInfoRepository.IsAppointment(startTime, endTime, roomId);
+        if (count > 0) {
+            log.info("This meeting room has been reserved for this time period.roomId: [{}]", roomId);
+            return new ReservationInfoRep()
+                    .setResult(
+                            new Result(CommonResult.INVALID_PARAM.getCode(),
+                                    "This meeting room has been reserved for this time period.")
+                    );
         }
-        return new ReservationInfoRep().setResult(CommonResult.SUCCESS.toResult());
+
+        // 没被预约，抢锁
+        String value = CommonUtils.getUUID();
+        String key = ConstantType.RESERVATION_INFO_CREATE + roomId;
+        try {
+            boolean lock = redisLock.lock(key, value, ConstantType.RESERVATION_INFO_ROCK,
+                    ConstantType.RESERVATION_INFO_CREATE_EXPIRE);
+            if (!lock) {
+                log.info("Failed to reserve a meeting room, try again later.roomId: [{}],startTime:[{}],endTime:[{}]"
+                        , roomId, startTime, endTime);
+                return new ReservationInfoRep()
+                        .setResult(
+                                new Result(CommonResult.INVALID_PARAM.getCode(),
+                                        "Failed to reserve a meeting room, try again later.")
+                        );
+            }
+            // 判断时间是否有被预约
+            int appointment = reservationInfoRepository.IsAppointment(startTime, endTime, roomId);
+            if (appointment > 0) {
+                log.info("This meeting room has been reserved for this time period.roomId: [{}]", roomId);
+                return new ReservationInfoRep()
+                        .setResult(
+                                new Result(CommonResult.INVALID_PARAM.getCode(),
+                                        "This meeting room has been reserved for this time period.")
+                        );
+            }
+            this.insertByEntity(roomId, startDate.get(), endDate.get(), userId);
+        } finally {
+            redisLock.unlock(key, value);
+        }
+        return new ReservationInfoRep()
+                .setResult(CommonResult.SUCCESS.toResult());
+    }
+
+    private ReservationInfoRep isCorrectTime(Date startDate, Date endDate, String startTime, String endTime) {
+        LocalDateTime localDateStart = DateUtils.dateToLocalDateTime(startDate);
+        LocalDateTime localDateEnd = DateUtils.dateToLocalDateTime(endDate);
+        if (localDateStart.isAfter(localDateEnd) || localDateStart.equals(localDateEnd)) {
+            log.info("Start time should be less than end time.startTime:[{}],endTime:[{}]", startTime, endTime);
+            return new ReservationInfoRep()
+                    .setResult(
+                            new Result(CommonResult.INVALID_PARAM.getCode(),
+                                    "Start time should be less than end time.")
+                    );
+        }
+        LocalDate localDate = LocalDate.now();
+        LocalDateTime zeroPoint = LocalDateTime.of(localDate, LocalTime.MIN);
+        if (zeroPoint.isAfter(localDateStart)) {
+            log.info("Can only reserve the meeting room on the day.startTime:[{}],endTime:[{}]", startTime, endTime);
+            return new ReservationInfoRep()
+                    .setResult(
+                            new Result(CommonResult.INVALID_PARAM.getCode(),
+                                    "Can only reserve the meeting room on the day.")
+                    );
+        }
+
+        LocalDateTime TwentyFourOClock = LocalDateTime.of(localDate, LocalTime.MAX);
+        if (localDateEnd.isAfter(TwentyFourOClock)) {
+            log.info("The appointment time can only be today.startTime:[{}],endTime:[{}]", startTime, endTime);
+            return new ReservationInfoRep()
+                    .setResult(
+                            new Result(CommonResult.INVALID_PARAM.getCode(),
+                                    "The appointment time can only be today.")
+                    );
+        }
+        return null;
+    }
+
+    private void insertByEntity(String roomId, Date startDate, Date endDate, String userId) {
+        Date time = new Date();
+        ReservationInfoEntity reservationInfoEntity = ReservationInfoEntity.builder()
+                .roomId(roomId)
+                .startTime(startDate)
+                .endTime(endDate)
+                .roomId(roomId)
+                .userId(userId)
+                .createTime(time)
+                .updateTime(time)
+                .build();
+        this.save(reservationInfoEntity);
     }
 }

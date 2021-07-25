@@ -18,4 +18,14 @@ public interface ReservationInfoRepository {
      * @return list
      */
     Page<ReservationInfoDto> getReservationsByPage(Page<ReservationInfoEntity> page, ReservationInfoQo reservationInfoQo);
+
+    /**
+     * 是否有被预约
+     *
+     * @param startTime 开始时间
+     * @param endTime   结束时间
+     * @param roomId    user id
+     * @return int
+     */
+    int IsAppointment(String startTime, String endTime, String roomId);
 }
