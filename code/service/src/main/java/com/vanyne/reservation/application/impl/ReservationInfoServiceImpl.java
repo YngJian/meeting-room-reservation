@@ -144,9 +144,7 @@ public class ReservationInfoServiceImpl extends ServiceImpl<ReservationInfoMappe
         }
 
         // 判断时间是否有被预约
-        int count = reservationInfoRepository.IsAppointment(startTime, endTime, roomId);
-        if (count > 0) {
-            log.info("This meeting room has been reserved for this time period.roomId: [{}]", roomId);
+        if (isAppointmentTimePeriod(startTime, endTime, roomId)) {
             return new ReservationInfoRep()
                     .setResult(
                             new Result(CommonResult.INVALID_PARAM.getCode(),
@@ -170,9 +168,7 @@ public class ReservationInfoServiceImpl extends ServiceImpl<ReservationInfoMappe
                         );
             }
             // 判断时间是否有被预约
-            int appointment = reservationInfoRepository.IsAppointment(startTime, endTime, roomId);
-            if (appointment > 0) {
-                log.info("This meeting room has been reserved for this time period.roomId: [{}]", roomId);
+            if (isAppointmentTimePeriod(startTime, endTime, roomId)) {
                 return new ReservationInfoRep()
                         .setResult(
                                 new Result(CommonResult.INVALID_PARAM.getCode(),
@@ -233,5 +229,195 @@ public class ReservationInfoServiceImpl extends ServiceImpl<ReservationInfoMappe
                 .updateTime(time)
                 .build();
         this.save(reservationInfoEntity);
+    }
+
+    /**
+     * 删除会议室预约信息信息
+     *
+     * @param id    id
+     * @param token token
+     * @return disableReservationInfoRep
+     */
+    @Override
+    public ReservationInfoRep deleteReservationInfo(Integer id, String token) {
+        ReservationInfoEntity reservationInfoEntity = this.getById(id);
+        if (reservationInfoEntity == null) {
+            log.info("id does not exist.id:[{}]", id);
+            return new ReservationInfoRep()
+                    .setResult(
+                            new Result(CommonResult.INVALID_PARAM.getCode(),
+                                    "id does not exist.!")
+                    );
+        }
+
+        ReservationInfoRep validParam = isValidParam(id, token, reservationInfoEntity.getUserId());
+        if (validParam != null) {
+            return validParam;
+        }
+
+        this.removeById(id);
+        return new ReservationInfoRep().setResult(CommonResult.SUCCESS.toResult());
+    }
+
+    /**
+     * 修改会议室预约信息信息
+     *
+     * @param id                       id
+     * @param token                    token
+     * @param updateReservationInfoReq u
+     * @return disableReservationInfoRep
+     */
+    @Override
+    public ReservationInfoRep updateReservationInfo(Integer id, String token, UpdateReservationInfoReq updateReservationInfoReq) {
+        ReservationInfoEntity reservationInfoEntity = this.getById(id);
+        if (reservationInfoEntity == null) {
+            log.info("id does not exist.id:[{}]", id);
+            return new ReservationInfoRep()
+                    .setResult(
+                            new Result(CommonResult.INVALID_PARAM.getCode(),
+                                    "id does not exist.!")
+                    );
+        }
+
+        ReservationInfoRep validParam = this.isValidParam(id, token, reservationInfoEntity.getUserId());
+        if (validParam != null) {
+            return validParam;
+        }
+        String startTime = updateReservationInfoReq.getStartTime();
+        String endTime = updateReservationInfoReq.getEndTime();
+        String roomId = updateReservationInfoReq.getRoomId();
+
+        Optional<Date> startDate = DateUtils.parse(startTime);
+        Optional<Date> endDate = DateUtils.parse(endTime);
+        if (!startDate.isPresent() || !endDate.isPresent()) {
+            log.info("The time format is incorrect.startTime:[{}],endTime:[{}]", startTime, endTime);
+            return new ReservationInfoRep()
+                    .setResult(
+                            new Result(CommonResult.INVALID_PARAM.getCode(),
+                                    "The time format is incorrect.")
+                    );
+        }
+
+        ReservationInfoRep reservationInfoRep = this.isCorrectTime(startDate.get(), endDate.get(), startTime, endTime);
+        if (reservationInfoRep != null) {
+            return reservationInfoRep;
+        }
+
+        if (isModifyTheDay(startTime, endTime, reservationInfoEntity.getStartTime())) {
+            return new ReservationInfoRep()
+                    .setResult(
+                            new Result(CommonResult.INVALID_PARAM.getCode(),
+                                    "Can only modify the appointment for the day.")
+                    );
+        }
+
+        ReservationInfoRep idMatchRoomId = this.idMatchRoomId(reservationInfoEntity.getRoomId(), id, roomId);
+        if (idMatchRoomId != null) {
+            return idMatchRoomId;
+        }
+
+        // 判断时间是否有被预约
+        if (isAppointmentTimePeriod(startTime, endTime, roomId)) {
+            return new ReservationInfoRep()
+                    .setResult(
+                            new Result(CommonResult.INVALID_PARAM.getCode(),
+                                    "This meeting room has been reserved for this time period.")
+                    );
+        }
+
+        // 没被预约，抢锁
+        String value = CommonUtils.getUUID();
+        String key = ConstantType.RESERVATION_INFO_CREATE + roomId;
+        try {
+            boolean lock = redisLock.lock(key, value, ConstantType.RESERVATION_INFO_ROCK,
+                    ConstantType.RESERVATION_INFO_CREATE_EXPIRE);
+            if (!lock) {
+                log.info("Failed to reserve a meeting room, try again later.roomId: [{}],startTime:[{}],endTime:[{}]"
+                        , roomId, startTime, endTime);
+                return new ReservationInfoRep()
+                        .setResult(
+                                new Result(CommonResult.INVALID_PARAM.getCode(),
+                                        "Failed to reserve a meeting room, try again later.")
+                        );
+            }
+            // 判断时间是否有被预约
+            if (isAppointmentTimePeriod(startTime, endTime, roomId)) {
+                return new ReservationInfoRep()
+                        .setResult(
+                                new Result(CommonResult.INVALID_PARAM.getCode(),
+                                        "This meeting room has been reserved for this time period.")
+                        );
+            }
+            this.updateEntityById(id, startDate.get(), endDate.get());
+        } finally {
+            redisLock.unlock(key, value);
+        }
+        return new ReservationInfoRep()
+                .setResult(CommonResult.SUCCESS.toResult());
+    }
+
+    private boolean isModifyTheDay(String startTime, String endTime, Date infoStartTime) {
+        LocalDate localDate = LocalDate.now();
+        LocalDateTime zeroPoint = LocalDateTime.of(localDate, LocalTime.MIN);
+        if (DateUtils.dateToLocalDateTime(infoStartTime).isBefore(zeroPoint)) {
+            log.info("Can only modify the appointment for the day.startTime:[{}],endTime:[{}]", startTime, endTime);
+            return true;
+        }
+        return false;
+    }
+
+    private void updateEntityById(Integer id, Date startDate, Date endDate) {
+        ReservationInfoEntity reservationInfoEntity = ReservationInfoEntity.builder()
+                .id(id)
+                .startTime(startDate)
+                .endTime(endDate)
+                .updateTime(new Date())
+                .build();
+        this.updateById(reservationInfoEntity);
+    }
+
+    private boolean isAppointmentTimePeriod(String startTime, String endTime, String roomId) {
+        int count = reservationInfoRepository.IsAppointment(startTime, endTime, roomId);
+        if (count > 0) {
+            log.info("This meeting room has been reserved for this time period.roomId: [{}]", roomId);
+            return true;
+        }
+        return false;
+    }
+
+    private ReservationInfoRep isValidParam(Integer id, String token, String userId) {
+        String user = stringRedisTemplate.opsForValue().get(ConstantType.TOKEN_KEY + token);
+        if (StringUtils.isEmpty(user)) {
+            log.info("The token [{}] has expired, please log in again!", token);
+            return new ReservationInfoRep()
+                    .setResult(
+                            new Result(CommonResult.INVALID_PARAM.getCode(),
+                                    "The token has expired, please log in again!")
+                    );
+        }
+        UserInfo userInfo = JSONUtil.toBean(user, UserInfo.class);
+        String userInfoUserId = userInfo.getUserId();
+
+        if (!userInfoUserId.equals(userId)) {
+            log.info("Only allow to delete own appointments.token:[{}]", token);
+            return new ReservationInfoRep()
+                    .setResult(
+                            new Result(CommonResult.INVALID_PARAM.getCode(),
+                                    "Only allow to delete own appointments!")
+                    );
+        }
+        return null;
+    }
+
+    private ReservationInfoRep idMatchRoomId(String infoRoomId, Integer id, String roomId) {
+        if (!roomId.equals(infoRoomId)) {
+            log.info("Id and room id do not match.id:[{}], roomId: [{}]", id, roomId);
+            return new ReservationInfoRep()
+                    .setResult(
+                            new Result(CommonResult.INVALID_PARAM.getCode(),
+                                    "Id and room id do not match.")
+                    );
+        }
+        return null;
     }
 }

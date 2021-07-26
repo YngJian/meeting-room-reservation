@@ -3,6 +3,7 @@ package com.vayne.model.api;
 import com.vayne.model.model.CreateReservationInfoReq;
 import com.vayne.model.model.ListReservationInfoRep;
 import com.vayne.model.model.ReservationInfoRep;
+import com.vayne.model.model.UpdateReservationInfoReq;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
@@ -44,4 +45,14 @@ public interface ReservationInfoApi {
      * @return disableReservationInfoRep
      */
     ReservationInfoRep deleteReservationInfo(@NotNull @NotEmpty Integer id, String token);
+
+    /**
+     * 修改会议室预约信息信息
+     *
+     * @param id    id
+     * @param token token
+     * @return disableReservationInfoRep
+     */
+    ReservationInfoRep updateReservationInfo(@NotNull @NotEmpty Integer id, String token,
+                                             UpdateReservationInfoReq updateReservationInfoReq);
 }

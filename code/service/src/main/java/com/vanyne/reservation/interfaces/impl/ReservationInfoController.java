@@ -10,6 +10,7 @@ import com.vayne.model.common.Result;
 import com.vayne.model.model.CreateReservationInfoReq;
 import com.vayne.model.model.ListReservationInfoRep;
 import com.vayne.model.model.ReservationInfoRep;
+import com.vayne.model.model.UpdateReservationInfoReq;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -91,9 +92,25 @@ public class ReservationInfoController implements ReservationInfoApi {
      * @param token token
      * @return disableReservationInfoRep
      */
+    @DeleteMapping("/delete/{id}")
     @Override
-    public ReservationInfoRep deleteReservationInfo(@NotNull @NotEmpty Integer id,
+    public ReservationInfoRep deleteReservationInfo(@NotNull @NotEmpty @PathVariable Integer id,
                                                     @RequestHeader("token") String token) {
-        return null;
+        return reservationInfoService.deleteReservationInfo(id, token);
+    }
+
+    /**
+     * 修改会议室预约信息信息
+     *
+     * @param id    id
+     * @param token token
+     * @return disableReservationInfoRep
+     */
+    @PutMapping("/update/{id}")
+    @Override
+    public ReservationInfoRep updateReservationInfo(@NotNull @NotEmpty @PathVariable Integer id,
+                                                    @RequestHeader("token") String token,
+                                                    @RequestBody @Valid UpdateReservationInfoReq updateReservationInfoReq) {
+        return reservationInfoService.updateReservationInfo(id, token, updateReservationInfoReq);
     }
 }

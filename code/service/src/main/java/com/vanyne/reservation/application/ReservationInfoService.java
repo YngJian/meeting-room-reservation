@@ -6,6 +6,7 @@ import com.vanyne.reservation.infrastruction.repository.db.entity.ReservationInf
 import com.vayne.model.model.CreateReservationInfoReq;
 import com.vayne.model.model.ListReservationInfoRep;
 import com.vayne.model.model.ReservationInfoRep;
+import com.vayne.model.model.UpdateReservationInfoReq;
 
 public interface ReservationInfoService extends IService<ReservationInfoEntity> {
 
@@ -28,4 +29,23 @@ public interface ReservationInfoService extends IService<ReservationInfoEntity> 
      * @return ReservationInfoRep
      */
     ReservationInfoRep createReservationInfo(CreateReservationInfoReq createReservationInfoReq, String token);
+
+    /**
+     * 删除会议室预约信息信息
+     *
+     * @param id    id
+     * @param token token
+     * @return disableReservationInfoRep
+     */
+    ReservationInfoRep deleteReservationInfo(Integer id, String token);
+
+    /**
+     * 修改会议室预约信息信息
+     *
+     * @param id                       id
+     * @param token                    token
+     * @param updateReservationInfoReq updateReservationInfoReq
+     * @return disableReservationInfoRep
+     */
+    ReservationInfoRep updateReservationInfo(Integer id, String token, UpdateReservationInfoReq updateReservationInfoReq);
 }
