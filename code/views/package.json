@@ -8,8 +8,19 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "axios": "^0.18.0",
+    "dayjs": "^1.7.7",
+    "iview": "^3.2.2",
+    "iview-area": "^1.5.17",
     "core-js": "^3.6.5",
-    "vue": "^2.6.11"
+    "eslint-plugin-cypress": "^2.0.1",
+    "less": "^2.7.3",
+    "less-loader": "^4.0.5",
+    "vue": "^2.5.10",
+    "vue-i18n": "^7.8.0",
+    "vue-router": "^3.0.1",
+    "vuedraggable": "^2.16.0",
+    "vuex": "^3.0.1"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",
