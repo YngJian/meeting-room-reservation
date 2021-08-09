@@ -1,5 +1,7 @@
+CREATE SCHEMA IF NOT EXISTS reservation;
+
 #########################用户信息表#########################
-CREATE TABLE `t_user_info`
+CREATE TABLE `reservation`.`t_user_info`
 (
     `id`          int                                NOT NULL AUTO_INCREMENT COMMENT '主键',
     `user_id`     varchar(32) CHARACTER SET utf8mb4  NOT NULL COMMENT '用户id',
@@ -17,8 +19,7 @@ CREATE TABLE `t_user_info`
   CHARACTER SET = utf8mb4 COMMENT = '用户信息表';
 
 #########################会议室信息表#########################
-DROP TABLE `t_meet_room_info`;
-CREATE TABLE `t_meet_room_info`
+CREATE TABLE `reservation`.`t_meet_room_info`
 (
     `id`          int                               NOT NULL AUTO_INCREMENT COMMENT '主键',
     `room_id`     varchar(32) CHARACTER SET utf8mb4 NOT NULL COMMENT '房间id',
@@ -34,7 +35,7 @@ CREATE TABLE `t_meet_room_info`
   CHARACTER SET = utf8mb4 COMMENT = '会议室信息表';
 
 #########################会议室预约信息表#########################
-CREATE TABLE `t_reservation_info`
+CREATE TABLE `reservation`.`t_reservation_info`
 (
     `id`          int                               NOT NULL AUTO_INCREMENT COMMENT '主键',
     `room_id`     varchar(32) CHARACTER SET utf8mb4 NOT NULL COMMENT '房间id',
@@ -57,4 +58,5 @@ ALTER TABLE `t_user_info` DROP INDEX `user-2`;
 DROP TABLE `t_meet_room_info`;
 DROP TABLE `t_reservation_info`;
 DROP TABLE `t_user_info`;
+DROP SCHEMA `reservation`;
 */
