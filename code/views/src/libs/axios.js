@@ -21,9 +21,7 @@ axios.interceptors.request.use(request => {
 //登录过期(token失效)跳转
 axios.interceptors.response.use(response => {
   let data = response.data;
-  if (
-      data.result && [401].includes(response.status)
-  ) {
+  if ([401].includes(response.status)) {
     router.then(lib => {
       if (lib.default.currentRoute.name === "login") return;
       lib.default.push({
@@ -80,6 +78,14 @@ router.then(lib => {
 
 export function post(url, data, otherConfig) {
   return axios.post(url, data, otherConfig);
+}
+
+export function put(url, data) {
+  return axios.put(url, data);
+}
+
+export function Delete(url) {
+  return axios.delete(url);
 }
 
 export function get(url, data, otherConfig) {

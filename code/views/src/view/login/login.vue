@@ -29,6 +29,7 @@
 </template>
 <script>
 import {login} from "@/api/getData.js"
+import {setToken} from "@/libs/util";
 
 export default {
   data() {
@@ -59,21 +60,25 @@ export default {
       try {
         this.loading = true;
         // 调用登录接口
-        let {msg, data} = await login({
+        login({
           userName: this.formData.userName,
           password: this.formData.password
+        }).then(data => {
+          if (data.result.code == 0) {
+            this.$Message.success(data.result.msg);
+            setToken(data.token);
+            // 跳回指的路由;
+            let redirectUrl = decodeURIComponent(this.$route.query.redirect || '/')
+            this.$router.push({path: redirectUrl})
+          } else {
+            this.$Message.error(data.result.msg);
+          }
         });
-        this.$Message.success(msg);
-        window.localStorage.setItem('token', data.token) // 登录成功后将后台返回的token存到localStorage
-        // 跳回指的路由
-        let redirectUrl = decodeURIComponent(this.$route.query.redirect || '/')
-        this.$router.push({path: redirectUrl})
       } catch (e) {
         this.$Message.error(e);
       } finally {
         this.loading = false;
       }
-
     }
   }
 };

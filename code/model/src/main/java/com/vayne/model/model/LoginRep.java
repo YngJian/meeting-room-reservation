@@ -17,12 +17,6 @@ import lombok.experimental.Accessors;
 public class LoginRep {
     private Result result;
 
-    private Integer remainTimes;
-
-    private boolean pwdWrong;
-
-    private boolean locked;
-
     private String token;
 
     private UserInfo userInfo;

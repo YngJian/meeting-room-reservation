@@ -183,8 +183,7 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfoEnt
             log.info("Account is not normal. username: [{}].", userName);
             return new LoginRep()
                     .setResult(
-                            new Result(CommonResult.INVALID_PARAM.getCode(), "Account is not normal."))
-                    .setLocked(true);
+                            new Result(CommonResult.INVALID_PARAM.getCode(), "Account is not normal."));
         }
 
         // 密码是否正确
@@ -225,9 +224,8 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfoEnt
             log.info("Incorrect password. username: [{}]. remaining times：[{}].", userName, remainTimes);
             return new LoginRep()
                     .setResult(
-                            new Result(CommonResult.INVALID_PARAM.getCode(), "Incorrect password."))
-                    .setRemainTimes(remainTimes)
-                    .setPwdWrong(true);
+                            new Result(CommonResult.INVALID_PARAM.getCode(),
+                                    String.format("Incorrect password. %s chances left.", remainTimes)));
         } else {
             // 锁定账户
             UserInfoEntity infoEntity = UserInfoEntity.builder()
@@ -245,8 +243,7 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfoEnt
             log.info("Account locked，username: [{}].", userName);
             return new LoginRep()
                     .setResult(
-                            new Result(CommonResult.INVALID_PARAM.getCode(), "Account locked，"))
-                    .setLocked(true);
+                            new Result(CommonResult.INVALID_PARAM.getCode(), "Account locked，"));
         }
     }
 
