@@ -30,14 +30,15 @@
 <script>
 import {login} from "@/api/getData.js"
 import {setToken} from "@/libs/util";
+import config from '@/config'
 
 export default {
   data() {
     return {
       loding: false,
       formData: {
-        userName: "",
-        password: ""
+        userName: "asd",
+        password: "c67efc4c54311c857c8eb1aa294f8001"
       }
     };
   },
@@ -68,8 +69,9 @@ export default {
             this.$Message.success(data.result.msg);
             setToken(data.token);
             // 跳回指的路由;
-            let redirectUrl = decodeURIComponent(this.$route.query.redirect || '/')
-            this.$router.push({path: redirectUrl})
+            this.$router.push({
+              name: config.homeName
+            })
           } else {
             this.$Message.error(data.result.msg);
           }

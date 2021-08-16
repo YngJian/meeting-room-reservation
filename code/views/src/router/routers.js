@@ -13,26 +13,41 @@
  *  beforeCloseName: (-) 设置该字段，则在关闭当前tab页时会去'@/router/before-close.js'里寻找该字段名对应的方法，作为关闭前的钩子函数
  * }
  */
-
+import MainPage from '../view/mainPage'
+import Login from "../view/login/login";
+import home from "../view/home/home";
 // 主页面MainPage下面的子页面
 let pages = [
-  'Login'
+    'Login',
+    'home'
 ].map(name => ({
-  path: name,
-  name: name,
-  component: () =>
-      import (`@/view/${name}`)
+    path: name,
+    name: name,
+    component: () =>
+        import (`@/view/${name}/${name}`)
 }))
 
-import Login from "../view/login/login";
-
 export default [
-  {
-    path: '/login',
-    name: 'login',
-    meta: {
-      beforeCloseName: 'before_close_normal'
+    {
+        path: '/',
+        name: 'mainPage',
+        component: MainPage,
+        children: pages,
+        meta: {
+            requiresAuth: true // 访问该路由时需要判断是否登录
+        }
     },
-    component: Login
-  }
+    {
+        path: '/login',
+        name: 'login',
+        meta: {
+            beforeCloseName: 'before_close_normal'
+        },
+        component: Login
+    },
+    {
+        path: '/home',
+        name: 'home',
+        component: home
+    }
 ]

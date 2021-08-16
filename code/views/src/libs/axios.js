@@ -1,5 +1,6 @@
 import axios from "axios";
 import {Message} from "iview";
+import {getToken} from "@/libs/util";
 
 let router =
     import ("@/router");
@@ -14,7 +15,7 @@ let source = axios.CancelToken.source();
 
 //请求添加token
 axios.interceptors.request.use(request => {
-  request.headers["token"] = window.localStorage.getItem('token') ? window.localStorage.getItem('token') : "";
+  request.headers["token"] = getToken() ? getToken() : "";
   return request;
 });
 
