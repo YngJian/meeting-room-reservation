@@ -73,6 +73,19 @@ public class UserInfoController implements UserInfoApi {
     }
 
     /**
+     * 获取用户信息
+     *
+     * @param token token
+     * @return r
+     */
+    @UnLoginLimit
+    @PostMapping("/info")
+    @Override
+    public LoginRep getLoginInfo(@RequestHeader("token") String token) {
+        return userInfoService.getLoginInfo(token);
+    }
+
+    /**
      * 登录
      *
      * @param loginReq r

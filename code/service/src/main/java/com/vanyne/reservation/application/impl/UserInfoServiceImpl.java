@@ -349,4 +349,21 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfoEnt
         return new UnlockRep()
                 .setResult(CommonResult.SUCCESS.toResult());
     }
+
+    @Override
+    public LoginRep getLoginInfo(String token) {
+        String user = stringRedisTemplate.opsForValue().get(ConstantType.TOKEN_KEY + token);
+        if (StringUtils.isEmpty(user)) {
+            log.info("The token [{}] has expired, please log in again!", token);
+            return new LoginRep()
+                    .setResult(
+                            new Result(CommonResult.INVALID_PARAM.getCode(),
+                                    "The token has expired, please log in again!")
+                    );
+        }
+        UserInfo userInfo = JSONUtil.toBean(user, UserInfo.class);
+        return new LoginRep()
+                .setResult(CommonResult.SUCCESS.toResult())
+                .setUserInfo(userInfo);
+    }
 }

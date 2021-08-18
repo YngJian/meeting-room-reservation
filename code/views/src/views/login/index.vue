@@ -3,7 +3,7 @@
     <div class="login-card">
       <Card>
         <p slot="title" class="login-header">欢迎登陆</p>
-        <Form ref="loginForm" :model="formData" :rules="rules" class="login-form" @keydown.enter.native="handleSubmit">
+        <Form class="login-form" ref="loginForm" :model="formData" :rules="rules" @keydown.enter.native="handleSubmit">
           <FormItem prop="userName">
             <Input v-model="formData.userName" placeholder="请输入用户名">
               <span slot="prepend">
@@ -12,14 +12,14 @@
             </Input>
           </FormItem>
           <FormItem prop="password">
-            <Input v-model="formData.password" placeholder="请输入密码" type="password">
+            <Input type="password" v-model="formData.password" placeholder="请输入密码">
               <span slot="prepend">
                 <Icon :size="14" type="md-lock"></Icon>
               </span>
             </Input>
           </FormItem>
           <FormItem>
-            <Button long type="primary" @click="handleSubmit">登录</Button>
+            <Button @click="handleSubmit" type="primary" long>登录</Button>
           </FormItem>
         </Form>
         <p class="login-tip">输入任意用户名和密码即可</p>
@@ -28,9 +28,7 @@
   </div>
 </template>
 <script>
-import {login} from "@/api/getData.js"
-import {setToken} from "@/libs/util";
-import config from '@/config'
+import {login} from "@/api/user_info.js"
 
 export default {
   data() {
@@ -61,26 +59,27 @@ export default {
       try {
         this.loading = true;
         // 调用登录接口
-        login({
+        let {msg, data} = await login({
           userName: this.formData.userName,
           password: this.formData.password
-        }).then(data => {
-          if (data.result.code == 0) {
-            this.$Message.success(data.result.msg);
-            setToken(data.token);
-            // 跳回指的路由;
-            this.$router.push({
-              name: config.homeName
-            })
-          } else {
-            this.$Message.error(data.result.msg);
-          }
         });
+        this.$Message.success(msg);
+        window.localStorage.setItem('userInfo', JSON.stringify(data.userInfo)) // 登录成功后将后台返回的userInfo存到localStorage
+        window.localStorage.setItem('token', data.token) // 登录成功后将后台返回的token存到localStorage
+        // 跳回指的路由
+        let redirectUrl = decodeURIComponent(this.$route.query.redirect || '/')
+        this.$router.push({path: redirectUrl})
       } catch (e) {
         this.$Message.error(e);
       } finally {
         this.loading = false;
       }
+
+      // 无后台接口伪造数据
+      // let token = "12345";
+      // window.localStorage.setItem("token", token);
+      // let redirectUrl = decodeURIComponent(this.$route.query.redirect || "/");
+      // this.$router.push({ path: redirectUrl });
     }
   }
 };

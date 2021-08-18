@@ -47,6 +47,14 @@ public interface UserInfoApi {
     LoginRep login(@Valid @NotNull LoginReq loginReq);
 
     /**
+     * 获取用户信息
+     *
+     * @param token token
+     * @return r
+     */
+    LoginRep getLoginInfo(String token);
+
+    /**
      * 修改密码
      *
      * @param modifyPwdReq l

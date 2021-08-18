@@ -1,8 +1,7 @@
 <template>
   <div class="leftNav">
     <Menu v-for="(menuItem, menuIndex) in menuList" :key="menuIndex" ref="side_menu" :active-name="$route.name"
-          accordion
-          theme="dark">
+          accordion theme="dark">
 
       <!-- 展开没有子菜单 -->
       <MenuItem v-if="!menuItem.children || menuItem.children.length==0" :key="menuIndex" :name="menuItem.to"
@@ -29,19 +28,14 @@
 export default {
   data() {
     return {
-      menuList: [
+      menuPageList: [
         {
           name: "首页",
           to: "home",
           icon: "ios-archive-outline"
         },
         {
-          name: "关于",
-          to: "about",
-          icon: "ios-create-outline"
-        },
-        {
-          name: "菜单分类1",
+          name: "会议室信息",
           icon: "md-person",
           children: [
             {
@@ -51,7 +45,7 @@ export default {
           ]
         },
         {
-          name: "菜单分类2",
+          name: "会议室预约信息",
           icon: "ios-copy",
           children: [
             {
@@ -65,7 +59,7 @@ export default {
   },
   computed: {
     menuList() {
-      return this.menuList
+      return this.menuPageList;
     }
   },
   created() {
@@ -82,7 +76,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 /deep/
-.ivu-menu-dark.ivu-menu-vertical,
+.ivu-menu-dark.ivu-menu-vertical
 .ivu-menu-item-active:not(.ivu-menu-submenu) {
   border-right: none;
   color: #fff;

@@ -1,24 +1,23 @@
-# views
+### 安装依赖
 
-## Project setup
-```
-npm install
-```
-
-### Compiles and hot-reloads for development
-```
-npm run serve
+```shell
+ $ npm install
 ```
 
-### Compiles and minifies for production
-```
-npm run build
+### 开发调试
+
+```shell
+$ npm run dev
 ```
 
-### Lints and fixes files
-```
-npm run lint
+### 代码校验
+
+```shell
+$ npm run lint
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+### 构建
+
+```shell
+$ npm run build
+```

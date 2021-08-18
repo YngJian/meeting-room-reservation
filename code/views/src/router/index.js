@@ -1,39 +1,37 @@
 import Vue from 'vue'
-import Router from 'vue-router'
-import {getToken, setTitle} from '@/libs/util'
-import routers from './routers'
-import config from '@/config'
+import VueRouter from 'vue-router'
+import MainPage from '../views/mainPage'
+import Login from '../views/login'
 
-const {homeName} = config
+Vue.use(VueRouter)
 
-Vue.use(Router)
-const router = new Router({
+// 主页面MainPage下面的子页面
+let pages = [
+  'home'
+].map(name => ({
+  path: name,
+  name: name,
+  component: () =>
+    import (`@/views/${name}`)
+}))
+
+const router = new VueRouter({
   mode: 'history',
-  routes: routers
+  base: process.env.BASE_URL,
+  routes: [{
+    path: '/',
+    name: 'mainPage',
+    component: MainPage,
+    children: pages,
+    meta: {
+      requiresAuth: true // 访问该路由时需要判断是否登录
+    }
+  },
+    {
+      path: '/login',
+      name: 'login',
+      component: Login
+    },
+  ]
 })
-const LOGIN_PAGE_NAME = 'login'
-
-router.beforeEach((to, from, next) => {
-  const token = getToken()
-  if (!token && to.name !== LOGIN_PAGE_NAME) {
-    // 未登录且要跳转的页面不是登录页
-    next({
-      name: LOGIN_PAGE_NAME // 跳转到登录页
-    })
-  } else if (!token && to.name === LOGIN_PAGE_NAME) {
-    // 未登陆且要跳转的页面是登录页
-    next() // 跳转
-  } else if (token && to.name === LOGIN_PAGE_NAME) {
-    // 已登录且要跳转的页面是登录页
-    next({
-      name: homeName // 跳转到homeName页
-    })
-  }
-})
-
-router.afterEach(to => {
-  setTitle(to, router.app)
-  window.scrollTo(0, 0)
-})
-
 export default router

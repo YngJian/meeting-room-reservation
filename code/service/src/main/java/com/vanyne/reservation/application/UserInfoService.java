@@ -63,4 +63,12 @@ public interface UserInfoService extends IService<UserInfoEntity> {
      * @return r
      */
     UnlockRep unlockUser(@Valid UnlockReq unlockReq);
+
+    /**
+     * 获取用户信息
+     *
+     * @param token token
+     * @return r
+     */
+    LoginRep getLoginInfo(String token);
 }

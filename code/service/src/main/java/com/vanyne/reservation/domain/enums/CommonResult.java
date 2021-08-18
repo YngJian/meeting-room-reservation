@@ -5,6 +5,7 @@ import com.vayne.model.common.Result;
 public enum CommonResult {
     SUCCESS(0, "success"),
     FAILED(1, "failed"),
+    UN_LOGIN(2, "unlogin"),
     INVALID_PARAM(-1, "invalid param");
 
     private final int code;

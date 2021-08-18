@@ -1,13 +1,13 @@
 <template>
   <div class="mainPage">
     <div class="page-header">
-      <img class="header-logo" src="@/assets/images/logo.png"/>
-      <div class="header-title">后台管理系统</div>
+      <img src="@/assets/images/logo.png" class="header-logo"/>
+      <div class="header-title">会议室预约系统</div>
       <div class="header-right">
         <Icon type="ios-contact"/>
         <div class="userName">{{ loginInfo.userName }}</div>
-        <Poptip class="operation" placement="bottom-end">
-          <Icon class="option-icon" type="md-arrow-dropdown"/>
+        <Poptip placement="bottom-end" class="operation">
+          <Icon type="md-arrow-dropdown" class="option-icon"/>
           <div slot="content">
             <p class="exit" @click="exit">退出</p>
           </div>
@@ -22,36 +22,39 @@
 </template>
 <script>
 import LeftNav from "@/components/leftNav";
+import {logout} from "@/api/user_info";
 
 export default {
   components: {LeftNav},
 
   //   路由拦截
   async beforeRouteEnter(to, from, next) {
+    // 每次刷新页面新vuex会清空页面，因此需要调用一次获取用户信息接口获取用户信息再存入vuex
 
     // 判断当前路由是否需要登录验证
-    /*let token = window.localStorage.getItem("token");
+    let token = window.localStorage.getItem("token");
     if (to.meta.requiresAuth) {
       if (token) {
-        let firstPage = data.roleMenu[0].to;
-        next({ path: firstPage });
+        next({path: "/home"});
       } else {
         // 将页面路由重定向到登录页进行登录
         next({
           path: "/login",
-          query: { redirect: to.fullPath }
+          query: {redirect: to.fullPath}
         });
       }
     } else {
       next();
-    }*/
+    }
   },
   beforeDestroy() {
-    // logout();
+    logout();
   },
   computed: {
     loginInfo() {
-      return "aaa";
+      let data = window.localStorage.getItem("userInfo");
+      data = JSON.parse(data);
+      return data;
     }
   },
   methods: {
@@ -80,7 +83,7 @@ export default {
   width: 100%;
   z-index: 1000;
   color: #fff;
-  background: #3c435b;
+  background: #516e64;
   height: 65px;
   text-align: left;
 
@@ -103,7 +106,7 @@ export default {
 
 .header-right {
   float: right;
-  background: #565969;
+  background: #516e64;
 }
 
 .header-right > * {
@@ -151,7 +154,7 @@ i {
   float: left;
   height: 100%;
   text-align: left;
-  background: #515a6e;
+  background: #516e64;
   overflow: auto;
 }
 

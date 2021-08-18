@@ -1,6 +1,7 @@
 package com.vanyne.reservation.domain.handler;
 
 import com.vanyne.reservation.domain.enums.CommonResult;
+import com.vanyne.reservation.domain.exception.UnLoginException;
 import com.vayne.model.common.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
@@ -24,13 +25,15 @@ import java.util.List;
 public class GlobalExceptionHandler {
     @ExceptionHandler(value = Exception.class)
     @ResponseBody
-    public Result MyExceptionHandle(Exception exception) {
+    public Result myExceptionHandle(Exception exception) {
         log.error(exception.getMessage(), exception);
         BindingResult result = null;
         if (exception instanceof MethodArgumentNotValidException) {
             result = ((MethodArgumentNotValidException) exception).getBindingResult();
         } else if (exception instanceof BindException) {
             result = ((BindException) exception).getBindingResult();
+        } else if (exception instanceof UnLoginException) {
+            return new Result(CommonResult.UN_LOGIN.getCode(), exception.getMessage());
         }
 
         if (result == null) {
