@@ -3,6 +3,7 @@ package com.vanyne.reservation.domain.handler;
 import com.vanyne.reservation.domain.enums.CommonResult;
 import com.vanyne.reservation.domain.exception.UnLoginException;
 import com.vayne.model.common.Result;
+import com.vayne.model.model.ErrorRep;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.validation.BindException;
@@ -25,7 +26,7 @@ import java.util.List;
 public class GlobalExceptionHandler {
     @ExceptionHandler(value = Exception.class)
     @ResponseBody
-    public Result myExceptionHandle(Exception exception) {
+    public ErrorRep myExceptionHandle(Exception exception) {
         log.error(exception.getMessage(), exception);
         BindingResult result = null;
         if (exception instanceof MethodArgumentNotValidException) {
@@ -33,11 +34,15 @@ public class GlobalExceptionHandler {
         } else if (exception instanceof BindException) {
             result = ((BindException) exception).getBindingResult();
         } else if (exception instanceof UnLoginException) {
-            return new Result(CommonResult.UN_LOGIN.getCode(), exception.getMessage());
+            return new ErrorRep()
+                    .setResult(
+                            new Result(CommonResult.UN_LOGIN.getCode(), exception.getMessage()));
         }
 
         if (result == null) {
-            return new Result(CommonResult.FAILED.getCode(), exception.getMessage());
+            return new ErrorRep()
+                    .setResult(
+                            new Result(CommonResult.FAILED.getCode(), exception.getMessage()));
         }
 
         StringBuilder errorMsg = new StringBuilder();
@@ -46,7 +51,9 @@ public class GlobalExceptionHandler {
             fieldErrors.forEach(error ->
                     errorMsg.append(error.getField()).append(": ").append(error.getDefaultMessage()).append("!"));
         }
-        return new Result(CommonResult.FAILED.getCode(), errorMsg.toString());
+        return new ErrorRep()
+                .setResult(
+                        new Result(CommonResult.FAILED.getCode(), errorMsg.toString()));
     }
 
 }
