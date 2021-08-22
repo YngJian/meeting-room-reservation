@@ -11,7 +11,7 @@
 
     <groupId>com.vayne</groupId>
     <artifactId>reservation</artifactId>
-    <version>${project.version}</version>
+    <version>0.0.1-SNAPSHOT</version>
     <name>reservation</name>
     <packaging>pom</packaging>
     <description>Parent project for reservation</description>
@@ -28,6 +28,7 @@
         <module>code/model</module>
         <module>code/client</module>
         <module>code/service</module>
+        <module>code/annotation-vayne</module>
     </modules>
 
     <dependencyManagement>
