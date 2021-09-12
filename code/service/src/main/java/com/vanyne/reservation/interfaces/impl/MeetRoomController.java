@@ -20,6 +20,10 @@ import javax.validation.constraints.NotNull;
 @RestController
 @RequestMapping("/room")
 public class MeetRoomController implements MeetRoomApi {
+    private final static Integer DEFAULT_PAGE_NUM = 1;
+
+    private final static Integer DEFAULT_PAGE_SIZE = 10;
+
     @Autowired
     private MeetRoomInfoService meetRoomInfoService;
 
@@ -38,8 +42,10 @@ public class MeetRoomController implements MeetRoomApi {
     public ListMeetRoomRep listMeetRoom(@RequestParam(value = "roomName", required = false) String roomName,
                                         @RequestParam(value = "minCapacity", required = false) Integer minCapacity,
                                         @RequestParam(value = "maxCapacity", required = false) Integer maxCapacity,
-                                        @RequestParam("pageNum") @NotNull Integer pageNum,
-                                        @RequestParam("pageSize") @NotNull Integer pageSize) {
+                                        @RequestParam(required = false) Integer pageNum,
+                                        @RequestParam(required = false) Integer pageSize) {
+        pageNum = pageNum == null ? DEFAULT_PAGE_NUM : pageNum;
+        pageSize = pageSize == null ? DEFAULT_PAGE_SIZE : pageSize;
         return meetRoomInfoService.listMeetRoom(roomName, minCapacity, maxCapacity, pageNum, pageSize);
     }
 

@@ -50,9 +50,9 @@ public class MeetRoomInfoServiceImpl extends ServiceImpl<MeetRoomInfoMapper, Mee
         queryWrapper.likeRight(!StringUtils.isEmpty(roomName), MeetRoomInfoEntity.COL_ROOM_NAME, roomName)
                 .le(maxCapacity != null, MeetRoomInfoEntity.COL_CAPACITY, maxCapacity)
                 .ge(minCapacity != null, MeetRoomInfoEntity.COL_CAPACITY, minCapacity);
-        IPage<MeetRoomInfoEntity> meetRoomInfoEntityIPage = meetRoomInfoRepository.selectList(pageNum, pageSize, queryWrapper);
+        IPage<MeetRoomInfoEntity> meetRoomInfoEntityPage = meetRoomInfoRepository.selectList(pageNum, pageSize, queryWrapper);
 
-        List<MeetRoomInfoEntity> records = meetRoomInfoEntityIPage.getRecords();
+        List<MeetRoomInfoEntity> records = meetRoomInfoEntityPage.getRecords();
         List<MeetRoomInfo> meetRoomInfos = new ArrayList<>(records.size());
 
         records.forEach(meetRoomInfoEntity -> {
@@ -65,7 +65,7 @@ public class MeetRoomInfoServiceImpl extends ServiceImpl<MeetRoomInfoMapper, Mee
 
         return new ListMeetRoomRep()
                 .setResult(CommonResult.SUCCESS.toResult())
-                .setTotal((int) meetRoomInfoEntityIPage.getTotal())
+                .setTotal((int) meetRoomInfoEntityPage.getTotal())
                 .setMeetRoomInfo(meetRoomInfos);
     }
 
@@ -95,6 +95,17 @@ public class MeetRoomInfoServiceImpl extends ServiceImpl<MeetRoomInfoMapper, Mee
         UserInfo userInfo = JSONUtil.toBean(user, UserInfo.class);
         String roomName = createMeetRoomReq.getRoomName();
         Integer capacity = createMeetRoomReq.getCapacity();
+
+        int count = meetRoomInfoRepository.selectCountByRoomName(roomName);
+        if (count > 0) {
+            log.info("The meeting room name [{}] already exists.", roomName);
+            return new CreateMeetRoomRep()
+                    .setResult(
+                            new Result(CommonResult.INVALID_PARAM.getCode(),
+                                    "The meeting room name already exists.")
+                    );
+        }
+
         Date date = new Date();
         MeetRoomInfoEntity roomInfoEntity = MeetRoomInfoEntity.builder()
                 .roomId(CommonUtils.getUUID())
@@ -112,7 +123,7 @@ public class MeetRoomInfoServiceImpl extends ServiceImpl<MeetRoomInfoMapper, Mee
             return new CreateMeetRoomRep()
                     .setResult(
                             new Result(CommonResult.FAILED.getCode(),
-                                    "Failed to save database!")
+                                    "Failed to create room!")
                     );
         }
 

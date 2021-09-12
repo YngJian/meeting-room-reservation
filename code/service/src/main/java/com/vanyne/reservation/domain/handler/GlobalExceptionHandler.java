@@ -42,7 +42,7 @@ public class GlobalExceptionHandler {
         if (result == null) {
             return new ErrorRep()
                     .setResult(
-                            new Result(CommonResult.FAILED.getCode(), exception.getMessage()));
+                            new Result(CommonResult.FAILED.getCode(), CommonResult.FAILED.getMsg()));
         }
 
         StringBuilder errorMsg = new StringBuilder();

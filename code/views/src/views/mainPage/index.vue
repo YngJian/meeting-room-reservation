@@ -22,7 +22,7 @@
 </template>
 <script>
 import LeftNav from "@/components/leftNav";
-import {logout} from "@/api/user_info";
+import {logout} from "@/api/userInfo";
 
 export default {
   components: {LeftNav},

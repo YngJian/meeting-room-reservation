@@ -2,13 +2,15 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
-import iview from 'iview'
-import 'iview/dist/styles/iview.css'
 import auth from '@/utils/auth';
 // import '@/assets/css/common.scss' /*引入公共样式*/
+import ViewUI from 'view-design';
+// import style
+import 'view-design/dist/styles/iview.css';
 
 Vue.config.productionTip = false
-Vue.use(iview)
+Vue.use(ViewUI)
+
 Vue.directive("auth", auth);
 
 new Vue({

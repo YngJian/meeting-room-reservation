@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import MainPage from '../views/mainPage'
 import Login from '../views/login'
+import room from '../views/room'
 
 Vue.use(VueRouter)
 
@@ -31,7 +32,11 @@ const router = new VueRouter({
       path: '/login',
       name: 'login',
       component: Login
-    },
+    }, {
+      path: '/room',
+      name: 'room',
+      component: room
+    }
   ]
 })
 export default router

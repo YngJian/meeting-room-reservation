@@ -28,7 +28,7 @@
   </div>
 </template>
 <script>
-import {login} from "@/api/user_info.js"
+import {login} from "@/api/userInfo.js"
 
 export default {
   data() {
