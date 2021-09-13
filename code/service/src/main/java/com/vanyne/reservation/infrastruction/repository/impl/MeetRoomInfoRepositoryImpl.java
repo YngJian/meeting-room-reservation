@@ -35,13 +35,26 @@ public class MeetRoomInfoRepositoryImpl implements MeetRoomInfoRepository {
     /**
      * 根据roomId查询
      *
-     * @param roomId userId
+     * @param roomId roomId
      * @return int
      */
     @Override
     public int selectCountByRoomId(String roomId) {
         QueryWrapper<MeetRoomInfoEntity> userInfoWrapper = new QueryWrapper<>();
         userInfoWrapper.eq(MeetRoomInfoEntity.COL_ROOM_ID, roomId);
+        return meetRoomInfoMapper.selectCount(userInfoWrapper);
+    }
+
+    /**
+     * 根据roomName查询
+     *
+     * @param roomName roomName
+     * @return int
+     */
+    @Override
+    public int selectCountByRoomName(String roomName) {
+        QueryWrapper<MeetRoomInfoEntity> userInfoWrapper = new QueryWrapper<>();
+        userInfoWrapper.eq(MeetRoomInfoEntity.COL_ROOM_NAME, roomName);
         return meetRoomInfoMapper.selectCount(userInfoWrapper);
     }
 }

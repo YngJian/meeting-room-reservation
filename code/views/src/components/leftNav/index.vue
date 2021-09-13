@@ -40,7 +40,7 @@ export default {
           children: [
             {
               name: "用户",
-              to: "user"
+              to: "room"
             }
           ]
         },

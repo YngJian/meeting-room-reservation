@@ -1,5 +1,6 @@
 import axios from "axios";
-import { Message } from "iview";
+import {Message} from "view-design";
+
 let router =
   import ("@/router");
 
@@ -57,7 +58,8 @@ axios.interceptors.response.use(response => {
 }, err => {
   let isCancel = axios.isCancel(err);
   if (isCancel) {
-    return new Promise(() => {});
+    return new Promise(() => {
+    });
   }
   return Promise.reject(
     err.response.result &&
@@ -80,13 +82,20 @@ router.then(lib => {
   })
 })
 
-export function post(url, data, otherConfig) {
-  return axios.post(url, data, otherConfig);
+export function Post(url, data) {
+  return axios.post(url, data);
 }
 
-export function get(url, data, otherConfig) {
+export function Put(url, data) {
+  return axios.put(url, data);
+}
+
+export function Delete(url, data) {
+  return axios.delete(url, data);
+}
+
+export function Get(url, data) {
   return axios.get(url, {
-    params: data,
-    ...otherConfig
+    params: data
   });
 }

@@ -27,6 +27,10 @@ import javax.validation.constraints.NotNull;
 @RequestMapping("/reservation")
 @Slf4j
 public class ReservationInfoController implements ReservationInfoApi {
+    private final static Integer DEFAULT_PAGE_NUM = 1;
+
+    private final static Integer DEFAULT_PAGE_SIZE = 10;
+
     @Autowired
     private ReservationInfoService reservationInfoService;
 
@@ -47,8 +51,8 @@ public class ReservationInfoController implements ReservationInfoApi {
                                                       @RequestParam(required = false) String userName,
                                                       @RequestParam(required = false) String startTime,
                                                       @RequestParam(required = false) String endTime,
-                                                      @NotNull @RequestParam Integer pageNum,
-                                                      @NotNull @RequestParam Integer pageSize) {
+                                                      @RequestParam(required = false) Integer pageNum,
+                                                      @RequestParam(required = false) Integer pageSize) {
         ReservationInfoQo reservationInfoQo = new ReservationInfoQo();
 
         String msg = "The start time format is incorrect.";
@@ -68,6 +72,8 @@ public class ReservationInfoController implements ReservationInfoApi {
 
         reservationInfoQo.setUserName(userName)
                 .setRoomName(roomName);
+        pageNum = pageNum == null ? DEFAULT_PAGE_NUM : pageNum;
+        pageSize = pageSize == null ? DEFAULT_PAGE_SIZE : pageSize;
         return reservationInfoService.listReservationInfo(reservationInfoQo, pageNum, pageSize);
     }
 

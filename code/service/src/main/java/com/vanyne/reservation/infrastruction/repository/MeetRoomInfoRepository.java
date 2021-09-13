@@ -26,4 +26,12 @@ public interface MeetRoomInfoRepository {
      * @return int
      */
     int selectCountByRoomId(String roomId);
+
+    /**
+     * 根据roomName查询
+     *
+     * @param roomName roomName
+     * @return int
+     */
+    int selectCountByRoomName(String roomName);
 }
