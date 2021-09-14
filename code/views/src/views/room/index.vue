@@ -1,24 +1,27 @@
 <template>
   <div>
     <div>
-      <Form :label-width="100">
-        <Row class="code-row-bg" justify="center" type="flex">
-          <Col span="8">
-            <span>会议室名称: </span>
-            <Input v-model="roomName" maxlength="64" placeholder="会议室名称" style="width: 200px"/>
+      <Form :label-width="100" label-position="right">
+        <Row class="code-row-bg">
+          <Col span="6">
+            <FormItem label="会议室名称: " prop="会议室名称: ">
+              <Input v-model="roomName" maxlength="64" placeholder="会议室名称" style="width: 300px"/>
+            </FormItem>
           </Col>
-          <Col span="8">
-            <span>最小容量: </span>
-            <Input v-model="minCapacity" class="number" placeholder="最小容量" style="width: 200px" type="number"/>
+          <Col offset="2" span="6">
+            <FormItem label="最小容量: " prop="最小容量: ">
+              <Input v-model="minCapacity" class="number" placeholder="最小容量" style="width: 300px" type="number"/>
+            </FormItem>
           </Col>
-          <Col span="8">
-            <span>最大容量: </span>
-            <Input v-model="maxCapacity" class="number" placeholder="最大容量" style="width: 200px" type="number"/>
+          <Col offset="2" span="6">
+            <FormItem label="最大容量: " prop="最大容量: ">
+              <Input v-model="maxCapacity" class="number" placeholder="最大容量" style="width: 300px" type="number"/>
+            </FormItem>
           </Col>
         </Row>
       </Form>
     </div>
-    <div style="text-align: right; margin-right: 188px;margin-top: 20px">
+    <div style="text-align: right; margin-right: 200px">
       <Button style="margin-right: 10px"
               type="success"
               @click="getData()">确定
@@ -26,6 +29,9 @@
       <Button type="warning"
               @click="resetInfo()">重置
       </Button>
+    </div>
+    <div style="text-align: right; margin-right: 200px; margin-top: 20px">
+      <Button type="primary">新增</Button>
     </div>
     <div style="margin-top: 30px">
       <Table :columns="roomColumns"
@@ -46,7 +52,7 @@
 </template>
 
 <script>
-import {listMeetRoom} from "@/api/roomInfo.js"
+import {disableMeetRoom, enableMeetRoom, listMeetRoom} from "@/api/roomInfo.js"
 import {time} from "@/utils/date.js"
 
 export default {
@@ -89,7 +95,23 @@ export default {
         {
           title: '状态',
           key: 'status',
-          align: 'center'
+          align: 'center',
+          render: (h, params) => {
+            let status = '';
+            if (params.row.status === 0) {
+              status = '禁用';
+            } else if (params.row.status === 1) {
+              status = '启用';
+            }
+            return h('div', [
+              h('Icon', {
+                props: {
+                  type: 'person'
+                }
+              }),
+              h('strong', status)
+            ]);
+          }
         },
         {
           title: '创建时间',
@@ -141,18 +163,18 @@ export default {
                     this.show(params.index)
                   }
                 }
-              }, 'View'),
+              }, '修改'),
               h('Button', {
                 props: {
-                  type: 'error',
+                  type: params.row.status === 0 ? 'info' : 'error',
                   size: 'small'
                 },
                 on: {
                   click: () => {
-                    this.remove(params.index)
+                    params.row.status === 0 ? this.enable(params.row.id) : this.disable(params.row.id)
                   }
                 }
-              }, 'Delete')
+              }, params.row.status === 0 ? '启用' : '禁用')
             ]);
           }
         }
@@ -171,8 +193,23 @@ export default {
         <br>状态：${this.roomData[index].status}`
       })
     },
-    remove(index) {
-      this.roomData.splice(index, 1);
+    async disable(id) {
+      try {
+        let {msg} = await disableMeetRoom(id);
+        this.$Message.success(msg);
+        await this.getData();
+      } catch (e) {
+        this.$Message.error("请求失败！");
+      }
+    },
+    async enable(id) {
+      try {
+        let {msg} = await enableMeetRoom(id);
+        this.$Message.success(msg);
+        await this.getData();
+      } catch (e) {
+        this.$Message.error("请求失败！");
+      }
     },
     getPageNum(value) {
       this.pageNum = value;

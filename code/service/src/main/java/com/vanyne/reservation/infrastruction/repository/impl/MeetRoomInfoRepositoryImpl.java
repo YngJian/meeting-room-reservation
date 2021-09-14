@@ -8,6 +8,7 @@ import com.vanyne.reservation.infrastruction.repository.db.entity.MeetRoomInfoEn
 import com.vanyne.reservation.infrastruction.repository.db.mapper.MeetRoomInfoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
 
 /**
  * @author : Yang Jian
@@ -21,14 +22,25 @@ public class MeetRoomInfoRepositoryImpl implements MeetRoomInfoRepository {
     /**
      * 查询列表
      *
-     * @param pageNum      页码
-     * @param pageSize     条数
-     * @param queryWrapper queryWrapper
+     * @param roomName    会议室名
+     * @param minCapacity 最小容量
+     * @param maxCapacity 最大容量
+     * @param pageNum     页码
+     * @param pageSize    条数
      * @return int
      */
     @Override
-    public IPage<MeetRoomInfoEntity> selectList(Integer pageNum, Integer pageSize, QueryWrapper<MeetRoomInfoEntity> queryWrapper) {
+    public IPage<MeetRoomInfoEntity> selectList(String roomName, Integer minCapacity, Integer maxCapacity,
+                                                Integer pageNum, Integer pageSize) {
         Page<MeetRoomInfoEntity> page = new Page<>(pageNum, pageSize, true);
+
+        QueryWrapper<MeetRoomInfoEntity> queryWrapper = new QueryWrapper<>();
+        queryWrapper.likeRight(!StringUtils.isEmpty(roomName), MeetRoomInfoEntity.COL_ROOM_NAME, roomName)
+                .le(maxCapacity != null, MeetRoomInfoEntity.COL_CAPACITY, maxCapacity)
+                .ge(minCapacity != null, MeetRoomInfoEntity.COL_CAPACITY, minCapacity)
+                .orderByDesc(MeetRoomInfoEntity.COL_UPDATE_TIME)
+                .orderByAsc(MeetRoomInfoEntity.COL_ROOM_NAME);
+
         return meetRoomInfoMapper.selectPage(page, queryWrapper);
     }
 

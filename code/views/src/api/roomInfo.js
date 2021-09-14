@@ -14,3 +14,8 @@ export function createReservationInfo(data) {
 export function disableMeetRoom(data) {
   return Put("room/disable/" + data);
 }
+
+// 禁用会议室
+export function enableMeetRoom(data) {
+  return Put("room/enable/" + data);
+}

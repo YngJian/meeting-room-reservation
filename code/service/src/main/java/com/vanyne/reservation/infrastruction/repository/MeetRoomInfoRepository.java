@@ -1,6 +1,5 @@
 package com.vanyne.reservation.infrastruction.repository;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.vanyne.reservation.infrastruction.repository.db.entity.MeetRoomInfoEntity;
 
@@ -12,12 +11,15 @@ public interface MeetRoomInfoRepository {
     /**
      * 查询列表
      *
-     * @param pageNum      页码
-     * @param pageSize     条数
-     * @param queryWrapper queryWrapper
+     * @param roomName    会议室名
+     * @param minCapacity 最小容量
+     * @param maxCapacity 最大容量
+     * @param pageNum     页码
+     * @param pageSize    条数
      * @return int
      */
-    IPage<MeetRoomInfoEntity> selectList(Integer pageNum, Integer pageSize, QueryWrapper<MeetRoomInfoEntity> queryWrapper);
+    IPage<MeetRoomInfoEntity> selectList(String roomName, Integer minCapacity, Integer maxCapacity,
+                                         Integer pageNum, Integer pageSize);
 
     /**
      * 根据roomId查询

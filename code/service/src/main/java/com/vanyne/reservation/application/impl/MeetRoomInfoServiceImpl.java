@@ -1,7 +1,6 @@
 package com.vanyne.reservation.application.impl;
 
 import cn.hutool.json.JSONUtil;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.vanyne.reservation.application.MeetRoomInfoService;
@@ -45,12 +44,11 @@ public class MeetRoomInfoServiceImpl extends ServiceImpl<MeetRoomInfoMapper, Mee
      * @return list
      */
     @Override
-    public ListMeetRoomRep listMeetRoom(String roomName, Integer minCapacity, Integer maxCapacity, Integer pageNum, Integer pageSize) {
-        QueryWrapper<MeetRoomInfoEntity> queryWrapper = new QueryWrapper<>();
-        queryWrapper.likeRight(!StringUtils.isEmpty(roomName), MeetRoomInfoEntity.COL_ROOM_NAME, roomName)
-                .le(maxCapacity != null, MeetRoomInfoEntity.COL_CAPACITY, maxCapacity)
-                .ge(minCapacity != null, MeetRoomInfoEntity.COL_CAPACITY, minCapacity);
-        IPage<MeetRoomInfoEntity> meetRoomInfoEntityPage = meetRoomInfoRepository.selectList(pageNum, pageSize, queryWrapper);
+    public ListMeetRoomRep listMeetRoom(String roomName, Integer minCapacity, Integer maxCapacity, Integer pageNum,
+                                        Integer pageSize) {
+
+        IPage<MeetRoomInfoEntity> meetRoomInfoEntityPage = meetRoomInfoRepository.selectList(roomName, minCapacity,
+                maxCapacity, pageNum, pageSize);
 
         List<MeetRoomInfoEntity> records = meetRoomInfoEntityPage.getRecords();
         List<MeetRoomInfo> meetRoomInfos = new ArrayList<>(records.size());
